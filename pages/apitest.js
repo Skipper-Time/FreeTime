@@ -52,6 +52,23 @@ export default function ApiButtons() {
       .catch(error => console.log(error))
   }
 
+  const addCalendar = (token, addCalData) => {
+    const { summary, description, location, colorId, start, end } = addCalData;
+
+    calendar.events.insert({
+      auth: token,
+      calendarId: 'primary',
+      requestBody: {
+        summary,
+        description,
+        location,
+        colorId,
+        start,
+        end,
+      }
+    })
+  }
+
 /*
  * TODO
  * We need to get refresh tokens for the user. It's hard to get a clear
