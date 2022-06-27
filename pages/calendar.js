@@ -14,6 +14,7 @@ import SignUpModal from './components/SignUpModal';
 import FriendsDrawer from './components/FriendsDrawer';
 import { useRef } from 'react';
 import CalTest from './components/CalTest';
+import Notifications from './components/Notifications';
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,14 +34,19 @@ export default function Home() {
         <Text as="b" fontSize="3xl">
           Free Time
         </Text>
-        <Button bg="#D9D9D9">Log out</Button>
+        <Box>
+          <Notifications />
+          <Button bg="#D9D9D9">Log out</Button>
+        </Box>
       </Flex>
-      <Flex flexDir="column" p="1rem" bg="#F6F3F3" w="100vw" h="100vh">
-        <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
-          Friends List
-        </Button>
-        <CalTest />
-      </Flex>
+      <Box p="1rem 3rem 3rem 3rem" bg="#F6F3F3" w="100vw">
+        <Box w="800px" m="auto">
+          <Button ref={btnRef} colorScheme="teal" onClick={onOpen} mb="1rem">
+            Find Friends
+          </Button>
+          <CalTest />
+        </Box>
+      </Box>
     </>
   );
 }

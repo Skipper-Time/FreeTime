@@ -27,7 +27,6 @@ const CalTest = () => {
     <FullCalendar
       ref={calendarRef}
       plugins={[timeGridPlugin, interactionPlugin]}
-      editable
       selectable
       dateClick={handleDateClick}
       eventClick={function (arg) {
