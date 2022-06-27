@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { setCookies } from 'cookies-next';
 
 export default function Home() {
+  const [idToken, setIdToken] = useState(null);
   const signUp = () => {
     provider.addScope("https://www.googleapis.com/auth/calendar");
     signInWithPopup(auth, provider)
@@ -17,8 +18,12 @@ export default function Home() {
       // The signed-in user info.
       const user = result.user;
       console.log('user', user)
+
       setCookies('googleToken', token);
+      return user;
     })
+      .then(user => user.getIdToken())
+      .then(token => setIdToken(token))
       .catch((error) => {
         console.log(error);
       // Handle Errors here.
