@@ -13,6 +13,7 @@ import LoginModal from './components/LoginModal';
 import SignUpModal from './components/SignUpModal';
 import FriendsDrawer from './components/FriendsDrawer';
 import { useRef } from 'react';
+import CalTest from './components/CalTest';
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,10 +35,11 @@ export default function Home() {
         </Text>
         <Button bg="#D9D9D9">Log out</Button>
       </Flex>
-      <Flex p="1rem" bg="#F6F3F3" w="100vw" h="100vh">
+      <Flex flexDir="column" p="1rem" bg="#F6F3F3" w="100vw" h="100vh">
         <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
           Friends List
         </Button>
+        <CalTest />
       </Flex>
     </>
   );
