@@ -3,6 +3,10 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { Provider } from 'react-redux';
 import store from '../redux/store';
 import { theme } from './components/theme';
+import '@fullcalendar/common/main.css';
+import '@fullcalendar/daygrid/main.css';
+import '@fullcalendar/timegrid/main.css';
+import '@fontsource/koh-santepheap';
 
 function MyApp({ Component, pageProps }) {
   return (
