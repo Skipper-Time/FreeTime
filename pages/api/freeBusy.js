@@ -1,15 +1,26 @@
 import { calendar_v3, google } from "googleapis";
+import oAuth2Client from '../../firebase/oAuthConfig';
 import { getCookie } from 'cookies-next';
 
-import oAuth2Client from '../../firebase/oAuthConfig';
 
+/*
+ * URL: /api/freeBusy
+ * QUERY: email
+ *
+ * EXAMPLE: /api/cal?email=jordan@gmail.com
+ *
+ * BODY: None
+ *
+ * Returns raw json response of freebusy data
+ */
 
 export default async function handler(req, res) {
-  // need to get the tokens from the client after authing
-//   const refreshToken = req.query.refreshToken;
-// const accessToken = req.query.accessToken;
   const refreshToken = getCookie('refreshToken', {req, res});
   const accessToken = getCookie('accessToken', {req, res});
+
+  // TODO Accept EMAIL as a query
+  // TODO Fetch refresh token, access token from firebase Db
+  // instead of from cookie
 
   // Set the credentials to the current person
   oAuth2Client.setCredentials({
@@ -17,7 +28,7 @@ export default async function handler(req, res) {
     access_token: accessToken,
   });
 
-  // dummy data (would normally be body data, i guess)
+
   let today = new Date();
   today.setHours(0, 0, 0, 0);
   // this is for one full week but it could be a month
@@ -25,20 +36,23 @@ export default async function handler(req, res) {
   let timeMin = today.toISOString();
   let timeMax = nextWeek.toISOString();
 
+
   // configure the calendar api thing
   const calendar = google.calendar({
       version: "v3",
       auth: oAuth2Client,
   });
 
-  // do the google api call
-  const events = await calendar.events.list({
-          calendarId: "primary",
-          timeMin,
-          timeMax,
-          singleEvents: true,
-        });
+  const calendarList = await calendar.calendarList.list();
+
+  const freeBusy = await calendar.freebusy.query({
+    requestBody: {
+      timeMin: timeMin,
+      timeMax: timeMax,
+      timeZone: 'PST',
+      items: calendarList.data.items
+  }});
 
   // send the info result back
-  res.status(200).json(events);
+  res.status(200).json(freeBusy);
 }

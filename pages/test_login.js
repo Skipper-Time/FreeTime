@@ -30,7 +30,7 @@ export default function Home() {
         const currentUser = await signInWithCredential(auth, credential);
 
         // SAMPLE API CALL to /api/cal
-        const url = `/api/cal?accessToken=${accessToken}&refreshToken=${refreshToken}`;
+        const url = `/api/freeBusy`;
         const response = await fetch(url);
         const json = await response.json();
         console.log('JSON!!!!');
