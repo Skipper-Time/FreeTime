@@ -11,6 +11,9 @@ import {
 } from '@chakra-ui/react';
 import LoginModal from './components/LoginModal';
 import SignUpModal from './components/SignUpModal';
+import FullCalendar from '@fullcalendar/react'; // keep these in this order!!
+import interactionPlugin from '@fullcalendar/interaction'; // keep these in this order!!
+import timeGridPlugin from '@fullcalendar/timegrid'; // keep these in this order!!
 
 export default function Home() {
   const {
@@ -75,7 +78,7 @@ export default function Home() {
                 h="360px"
                 objectFit="cover"
                 pos="absolute"
-                style={{ 'z-index': 100 }}
+                style={{ zIndex: 100 }}
               />
             </Box>
           </Flex>
