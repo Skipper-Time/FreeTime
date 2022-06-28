@@ -20,3 +20,6 @@ const app = initializeApp(firebaseConfig);
 // database
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+// FIX THIS!!!!!!!!!!
+// module.exports = getFirestore(app);
