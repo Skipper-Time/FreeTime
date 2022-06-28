@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flex, Box, Image, Text } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
 
 const FriendCard = () => {
   return (
@@ -21,14 +22,29 @@ const FriendCard = () => {
         borderColor="gray.300"
       />
       <Flex pos="relative" flexDir="column" width="100%">
-        <Text pos="absolute" top="4px" right="12px">
+        <Text pos="absolute" bottom="0px" right="12px">
           ...
         </Text>
+        <Flex
+          pos="absolute"
+          top="10%"
+          right="6px"
+          h="24px"
+          w="24px"
+          borderRadius="full"
+          border="black 2px solid"
+          alignContent="center"
+          _hover={{ cursor: 'pointer' }}
+        >
+          <AddIcon m="auto" />
+        </Flex>
         <Text as="b" alignSelf="start">
           John Doe
         </Text>
         <Text alignSelf="start">@johndoe</Text>
-        <Text alignSelf="end">Los Angeles, CA</Text>
+        <Text alignSelf="start" as="i">
+          Los Angeles, CA
+        </Text>
       </Flex>
     </Flex>
   );
