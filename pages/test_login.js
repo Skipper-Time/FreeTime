@@ -1,6 +1,7 @@
 // import {signupOrLogin} from '../methods/google';
 import { useRouter } from 'next/router'
 
+import { setCookies } from 'cookies-next';
 import { useState } from 'react';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { getAuth, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
@@ -22,6 +23,9 @@ export default function Home() {
         const accessToken = tokens.data.access_token;
         const idToken = tokens.data.id_token;
 
+        setCookies('refreshToken', refreshToken);
+        setCookies('accessToken', accessToken);
+
         const credential = await GoogleAuthProvider.credential(idToken);
         const currentUser = await signInWithCredential(auth, credential);
 
@@ -29,6 +33,7 @@ export default function Home() {
         const url = `/api/cal?accessToken=${accessToken}&refreshToken=${refreshToken}`;
         const response = await fetch(url);
         const json = await response.json();
+        console.log('JSON!!!!');
         console.log(json);
         // END SAMPLE
 
