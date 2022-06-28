@@ -6,6 +6,7 @@ import { setCookies } from 'cookies-next';
 import { getCookie, getCookies } from 'cookies-next';
 import { doc, setDoc, getDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
+console.log(db);
 
 export const signupOrLogin = (signupOrLogin) => {
   // access the token from the cookie 'googleToken'
