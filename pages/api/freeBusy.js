@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   // TODO Fetch refresh token, access token from firebase Db
   // instead of from cookie
 
-  // Set the credentials to the current person
+  // Set the credentials to the current person by adding the tokens to client
   oAuth2Client.setCredentials({
     refresh_token: refreshToken,
     access_token: accessToken,
