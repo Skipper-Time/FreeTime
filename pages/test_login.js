@@ -18,6 +18,7 @@ export default function Home() {
     onSuccess: async ({ code }) => {
       try {
         const tokens = await axios.post('/api/auth/google', { code });
+        console.log(tokens);
 
         const refreshToken = tokens.data.refresh_token;
         const accessToken = tokens.data.access_token;
@@ -28,6 +29,8 @@ export default function Home() {
 
         const credential = await GoogleAuthProvider.credential(idToken);
         const currentUser = await signInWithCredential(auth, credential);
+        console.log('GOOGLE LOGIN');
+        console.log(tokens);
 
         // SAMPLE API CALL to /api/freeBusy
         // email query parse not implemented yet until the server
