@@ -29,8 +29,10 @@ export default function Home() {
         const credential = await GoogleAuthProvider.credential(idToken);
         const currentUser = await signInWithCredential(auth, credential);
 
-        // SAMPLE API CALL to /api/cal
-        const url = `/api/freeBusy`;
+        // SAMPLE API CALL to /api/freeBusy
+        // email query parse not implemented yet until the server
+        // can actually fetch the tokens for that email
+        const url = `/api/freeBusy?email=${currentUser.user.email}`;
         const response = await fetch(url);
         const json = await response.json();
         console.log('JSON!!!!');
