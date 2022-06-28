@@ -7,7 +7,6 @@ export default function ApiButtons() {
   // this is probably a temporary solution to storing the token
   const token = getCookie('googleToken');
 
-
   const getCalendarList = (token) => {
     let url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
     // attach the token from the cookie to the authorization header
