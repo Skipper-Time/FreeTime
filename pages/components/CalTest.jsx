@@ -10,6 +10,7 @@ const CalTest = () => {
       title: 'event 1',
       start: '2022-06-28T12:30',
       end: '2022-06-28T14:30',
+      backgroundColor: 'rgba(0,0,0,0.2)',
     },
     {
       title: 'Feature Freeze 🥶',
@@ -25,6 +26,7 @@ const CalTest = () => {
   };
   return (
     <FullCalendar
+      theme={true}
       ref={calendarRef}
       plugins={[timeGridPlugin, interactionPlugin]}
       selectable

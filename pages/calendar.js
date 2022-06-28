@@ -15,6 +15,7 @@ import FriendsDrawer from './components/FriendsDrawer';
 import { useRef } from 'react';
 import CalTest from './components/CalTest';
 import Notifications from './components/Notifications';
+import Link from 'next/link';
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -24,29 +25,46 @@ export default function Home() {
     <>
       <FriendsDrawer btnRef={btnRef} isOpen={isOpen} onClose={onClose} />
       <Flex
-        bg="#C9CBA3"
+        bg="#E26D5C"
         justify="space-between"
         gap="1rem"
         w="100%"
         p="0.5rem 2rem"
         alignItems="center"
       >
-        <Text as="b" fontSize="3xl">
-          Free Time
+        <Text as="b" fontSize="3xl" color="#f6f3f3">
+          ⌛ Free Time
         </Text>
         <Box>
           <Notifications />
-          <Button bg="#D9D9D9">Log out</Button>
+          <Link href="/">
+            <Button colorScheme="whiteAlpha">Log out</Button>
+          </Link>
         </Box>
       </Flex>
-      <Box p="1rem 3rem 3rem 3rem" bg="#F6F3F3" w="100vw">
-        <Box w="800px" m="auto">
-          <Button ref={btnRef} colorScheme="teal" onClick={onOpen} mb="1rem">
+      <Flex justify="center" bg="#f6f3f3">
+        <Box
+          p="3rem 3rem 3rem 3rem"
+          bg="white"
+          w="800px"
+          mt="4rem"
+          borderRadius="12px"
+          style={{ filter: 'drop-shadow(10px 10px 10px rgba(0,0,0,0.2))' }}
+        >
+          <Button
+            ref={btnRef}
+            onClick={onOpen}
+            mb="1rem"
+            bg="#E26D5C"
+            color="#f6f3f3"
+          >
             Find Friends
           </Button>
-          <CalTest />
+          <Box>
+            <CalTest />
+          </Box>
         </Box>
-      </Box>
+      </Flex>
     </>
   );
 }

@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.17.12",
+    "@chakra-ui/icons": "^2.0.2",
     "@chakra-ui/react": "^2.2.1",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@fontsource/koh-santepheap": "^4.5.11",
     "@fullcalendar/common": "^5.11.0",
     "@fullcalendar/interaction": "^5.11.0",
     "@fullcalendar/react": "^5.11.1",
