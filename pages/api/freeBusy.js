@@ -7,7 +7,7 @@ import { getCookie } from 'cookies-next';
  * URL: /api/freeBusy
  * QUERY: email
  *
- * EXAMPLE: /api/cal?email=jordan@gmail.com
+ * EXAMPLE: /api/freeBusy?email=jordan@gmail.com
  *
  * BODY: None
  *
