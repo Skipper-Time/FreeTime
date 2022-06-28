@@ -17,6 +17,7 @@ const queryDbForTokens = require('../../methods/queryDbForTokens');
 
 export default async function handler(req, res) {
   const email = req.query.email;
+  const timeRange = req.query.timeRage;
 
   // TODO Fetch refresh token, access token from firebase Db
   // instead of from cookie
@@ -55,6 +56,9 @@ export default async function handler(req, res) {
       items: calendarList.data.items
   }});
 
+  // WE could put parsing logic here...
+  //
   // send the info result back
   res.status(200).json(freeBusy);
+
 }
