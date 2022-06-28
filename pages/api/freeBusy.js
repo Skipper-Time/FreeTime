@@ -2,6 +2,7 @@ import { calendar_v3, google } from "googleapis";
 import oAuth2Client from '../../firebase/oAuthConfig';
 import { getCookie } from 'cookies-next';
 
+const queryDbForTokens = require('../../methods/queryDbForTokens');
 
 /*
  * URL: /api/freeBusy
@@ -15,17 +16,18 @@ import { getCookie } from 'cookies-next';
  */
 
 export default async function handler(req, res) {
+  const email = req.query.email;
+
+  // TODO Fetch refresh token, access token from firebase Db
+  // instead of from cookie
+  const tokens = await queryDbForTokens(email);
   const refreshToken = getCookie('refreshToken', {req, res});
   const accessToken = getCookie('accessToken', {req, res});
 
-  // TODO Accept EMAIL as a query
-  // TODO Fetch refresh token, access token from firebase Db
-  // instead of from cookie
-
   // Set the credentials to the current person by adding the tokens to client
   oAuth2Client.setCredentials({
-    refresh_token: refreshToken,
-    access_token: accessToken,
+    refresh_token: refreshToken, // becomes tokens.refreshToken
+    access_token: accessToken, // becomes tokens.accessToken
   });
 
 

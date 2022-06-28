@@ -1,27 +1,7 @@
-const axios = require('axios');
+import { doc, setDoc, getDoc, collection } from 'firebase/firestore';
+import { db } from '../firebase/firebaseConfig';
 
-/*
-Insert access token and refresh token in to firebase db with email
-*/
-
-async function updateTokensInDb(tokens) {
-  console.log('==========UPDATING TOKEN=========')
-  const accessToken = tokens.access_token;
-  const refreshToken = tokens.refresh_token;
-
-  const idUrl =
-    `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${tokens.access_token}`;
-
-  try {
-    const idInfo = await axios.get(idUrl);
-
-    const email = idInfo.data.email
-
-    // TODO insert/update the email, refresh token, and access token
-    // in firebase DB
-  } catch (error) {
-    console.log(error);
-  }
+// INSERT or UPDATE access token, refresh token
+// WHERE email = input email
+module.exports = async function updateTokensInDb(email) {
 }
-
-module.exports = updateTokensInDb;
