@@ -1,4 +1,4 @@
-export default function addEvent (token, userEmail, calData) {
+export const addEvent = (token, userEmail, calData) => {
   console.log(calData, token);
   const { summary, description, location, colorId, start, end } = calData;
 

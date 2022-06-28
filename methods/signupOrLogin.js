@@ -1,6 +1,6 @@
 import styles from '../styles/Home.module.css'
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import {provider, auth} from '../firebase/firebaseConfig.js';
+import { provider, auth } from '../firebase/firebaseConfig.js';
 import { useState } from 'react';
 import { setCookies } from 'cookies-next';
 import { getCookie, getCookies } from 'cookies-next';

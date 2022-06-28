@@ -1,4 +1,4 @@
-import {signupOrLogin} from '../methods/signupOrLogin';
+import { signupOrLogin } from '../methods/signupOrLogin';
 import { useRouter } from 'next/router'
 
 export default function Home() {

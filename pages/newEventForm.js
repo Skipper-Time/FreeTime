@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { addEvent } from '../methods/addEvent.js';
+import { getCookie, getCookies } from 'cookies-next';
 
 export default function AddEvent () { // add userEmail as a prop
   let [summary, setSummary] = useState('');
@@ -25,6 +26,7 @@ export default function AddEvent () { // add userEmail as a prop
      },
    };
 
+   const token = getCookie('googleToken');
    addEvent(token, 'bowersaaronjames@gmail.com', body); // replace hardcoded email with prop.userEmail
  }
 
