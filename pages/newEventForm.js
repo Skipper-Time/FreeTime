@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { addEvent } from '../methods/addEvent.js';
 import { getCookie, getCookies } from 'cookies-next';
+import emailExists from '../methods/emailExists.js';
 
 export default function AddEvent () { // add userEmail as a prop
   let [summary, setSummary] = useState('');
@@ -10,6 +11,7 @@ export default function AddEvent () { // add userEmail as a prop
   let [endDateTime, setEndDateTime] = useState('');
   let [email, setEmail] = useState('');
   let [attendees, setAttendees] = useState([]);
+
 
   const Emails = () => {
     return (
@@ -23,9 +25,14 @@ export default function AddEvent () { // add userEmail as a prop
     )
   }
 
-  const addEmail = () => {
-    setAttendees([...attendees, { email }]);
-    setEmail('');
+  async function addEmail () {
+    let friendExists = await emailExists(email);
+    if (friendExists) {
+      setAttendees([...attendees, { email }]);
+      setEmail('');
+    } else {
+      alert('This person must first sign up for FreeTime for you to invite them.')
+    }
   }
 
   const handleSubmit = (e) => {
@@ -48,8 +55,8 @@ export default function AddEvent () { // add userEmail as a prop
    };
 
    console.log(body);
-  //  const token = getCookie('googleToken');
-  //  addEvent(token, 'bowersaaronjames@gmail.com', body); // replace hardcoded email with prop.userEmail
+   const token = getCookie('googleToken');
+   addEvent(token, 'bowersaaronjames@gmail.com', body); // replace hardcoded email with prop.userEmail
  }
 
  return (
