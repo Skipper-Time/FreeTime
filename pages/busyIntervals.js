@@ -1,3 +1,4 @@
+// those three vars are only for testing
 var numberOfDays = 7;
 var queryStartDate = new Date("2022-06-25T00:00:00Z")
 var busySlots = [
@@ -40,34 +41,37 @@ var busySlots = [
 
    ];
 
-// differenceInDays to calculate days between two dates
-function differenceInDays(date1, date2) {
-  // To calculate the time difference of two dates
-  var Difference_In_Time = date2.getTime() - date1.getTime();
-  // To calculate the no. of days between two dates
-  var Difference_In_Days = Math.floor(Difference_In_Time / (1000 * 3600 * 24));
-  return Difference_In_Days;
-}
-
-function merge(intervals) {
-  if (!intervals.length) {
-    return intervals;
-  }
-  intervals.sort((a, b) => a[0] - b[0]);
-  var prev = intervals[0];
-  var res = [prev];
-  for (var interval of intervals) {
-    if (interval[0] <= prev[1]) {
-      prev[1] = new Date(Math.max(prev[1], interval[1]));
-    } else {
-      res.push(interval);
-      prev = interval;
-    }
-  }
-  return res;
-}
-
+// mergeBusy is a function to be exported to merge busy times
 function mergeBusy(numberOfDays, queryStartDate, busySlots) {
+  // differenceInDays to calculate days between two dates
+  function differenceInDays(date1, date2) {
+    // To calculate the time difference of two dates
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Math.floor(Difference_In_Time / (1000 * 3600 * 24));
+    return Difference_In_Days;
+  }
+
+  // merge an array of intervals
+  // example: [[1, 3], [2,4]] => [[1, 4]]
+  function merge(intervals) {
+    if (!intervals.length) {
+      return intervals;
+    }
+    intervals.sort((a, b) => a[0] - b[0]);
+    var prev = intervals[0];
+    var res = [prev];
+    for (var interval of intervals) {
+      if (interval[0] <= prev[1]) {
+        prev[1] = new Date(Math.max(prev[1], interval[1]));
+      } else {
+        res.push(interval);
+        prev = interval;
+      }
+    }
+    return res;
+  }
+
   var daysOfIntervals = [];
   for (var i = 0; i < numberOfDays; i++) {
     daysOfIntervals.push([]);
@@ -83,6 +87,7 @@ function mergeBusy(numberOfDays, queryStartDate, busySlots) {
     daysOfIntervals[dayInDays].push(curr);
   }
 
+  // call merge for everyday's interval, and convert date to string format
   for (var i = 0; i < daysOfIntervals.length; i++) {
     daysOfIntervals[i] = merge(daysOfIntervals[i]);
     for (var interval of daysOfIntervals[i]) {
@@ -95,5 +100,5 @@ function mergeBusy(numberOfDays, queryStartDate, busySlots) {
   return daysOfIntervals;
 }
 
-console.log('original', busySlots);
-console.log('after merge', mergeBusy(numberOfDays, queryStartDate, busySlots))
+// console.log('original', busySlots);
+// console.log('after merge', mergeBusy(numberOfDays, queryStartDate, busySlots))
