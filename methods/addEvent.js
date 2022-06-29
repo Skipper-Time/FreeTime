@@ -1,6 +1,6 @@
-export const addEvent = (token, userEmail, calData) => {
+export const addEvent = (token, userEmail = 'FreeTime', calData) => {
   console.log(calData, token);
-  const { summary, description, location, colorId, start, end } = calData;
+  const { summary, description, location, attendees, colorId, start, end } = calData;
 
   let url = `https://www.googleapis.com/calendar/v3/calendars/${userEmail}/events`;
 
