@@ -5,6 +5,9 @@ const activeLabelStyles = {
 };
 
 export const theme = extendTheme({
+  // fonts: {
+  //   body: 'Koh Santepheap',
+  // },
   components: {
     Form: {
       variants: {
