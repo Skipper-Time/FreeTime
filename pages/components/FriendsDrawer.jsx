@@ -14,7 +14,14 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import FriendsList from './FriendsList';
 import FindFriends from './FindFriends';
 
-const FriendsDrawer = ({ btnRef, isOpen, onClose }) => {
+const FriendsDrawer = ({
+  btnRef,
+  isOpen,
+  onClose,
+  friends,
+  setFriends,
+  findMutualTime,
+}) => {
   const [currentView, setCurrentView] = useState('list');
   return (
     <>
@@ -38,7 +45,11 @@ const FriendsDrawer = ({ btnRef, isOpen, onClose }) => {
 
               <TabPanels>
                 <TabPanel>
-                  <FriendsList />
+                  <FriendsList
+                    friends={friends}
+                    setFriends={setFriends}
+                    findMutualTime={findMutualTime}
+                  />
                 </TabPanel>
                 <TabPanel>
                   <FindFriends />
