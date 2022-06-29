@@ -8,26 +8,48 @@ export default function AddEvent () { // add userEmail as a prop
   let [location, setLocation] = useState('');
   let [startDateTime, setStartDateTime] = useState('');
   let [endDateTime, setEndDateTime] = useState('');
+  let [email, setEmail] = useState('');
+  let [attendees, setAttendees] = useState([]);
 
- const handleSubmit = (e) => {
-   e.preventDefault();
-   console.log(summary, description, location, startDateTime, endDateTime);
-   console.log('2022-06-27T16:40:00-07:00', new Date(startDateTime).toISOString());
+  const Emails = () => {
+    return (
+      <>
+        <ul>
+          {attendees.map((attendee, id) => {
+            return <li key={id}>{attendee.email}</li>;
+          })}
+        </ul>
+      </>
+    )
+  }
+
+  const addEmail = () => {
+    setAttendees([...attendees, { email }]);
+    setEmail('');
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //  console.log(summary, description, location, startDateTime, endDateTime);
+    //  console.log('2022-06-27T16:40:00-07:00', new Date(startDateTime).toISOString());
+    console.log(attendees);
 
    let body = {
-     'summary': summary,
-     'location': location,
-     'description': description,
+     summary,
+     location,
+     description,
      'start': {
        'dateTime': new Date(startDateTime).toISOString(),
      },
      'end': {
        'dateTime': new Date(endDateTime).toISOString(),
      },
+     attendees,
    };
 
-   const token = getCookie('googleToken');
-   addEvent(token, 'bowersaaronjames@gmail.com', body); // replace hardcoded email with prop.userEmail
+   console.log(body);
+  //  const token = getCookie('googleToken');
+  //  addEvent(token, 'bowersaaronjames@gmail.com', body); // replace hardcoded email with prop.userEmail
  }
 
  return (
@@ -58,6 +80,18 @@ export default function AddEvent () { // add userEmail as a prop
          value={location}
          onChange={e => setLocation(e.target.value)}
        />
+       <br />
+       <label htmlFor='emails'>Attendee Emails</label>
+       <br />
+       <input
+         type='email'
+         id='emails'
+         value={email}
+         onChange={e => setEmail(e.target.value)}
+       />
+       <button type='button' onClick={addEmail}>+</button>
+       <br />
+       <Emails />
        <br />
        <label htmlFor='startDateTime'>Start Date Time</label>
        <br />
