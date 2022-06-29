@@ -33,11 +33,7 @@ a {
   border: 3px solid var(--custom-white);
 }
 
-.fc-timegrid-event:hover {
-  cursor: pointer;
-  transform: scale(1.03);
-}
 
 .fc-timegrid-event {
-  transition: 0.3s;
+  border-color: black !important;
 }
