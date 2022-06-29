@@ -24,34 +24,18 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [events, setEvents] = useState([]);
   const btnRef = useRef();
-  const [userData, setUserData] = useState({
-    displayName: 'Jessica Zhou',
-    email: 'jessicazhou541@gmail.com',
-    // profilePic: user.photoURL
-  });
   const [friends, setFriends] = useState([
     'deitchdustin@gmail.com',
     'hangyin2010@gmail.com',
   ]);
 
-  // const user = auth.currentUser;
-  // if (user !== null) {
-  //   setUserData({
-  //     displayName: user.displayName,
-  //     email: user.email,
-  //     profilePic: user.photoURL
-  //   })
-  // }
   const findMutualTime = (email) => {
     axios
       .get(`api/freeBusy?email=${email}`)
       .then((response) => {
         const result = response.data.data.calendars[email].busy;
-        // console.log('result', result)
         const newResult = [...result];
-        // console.log('newResult', newResult)
         setEvents((prevEvents) => {
-          // NOTE: this is layering events, not merging
           return [
             ...prevEvents,
             ...newResult.map((event) => ({
@@ -69,26 +53,34 @@ export default function Home() {
   };
 
   useEffect(() => {
-    axios
-      .get(`api/freeBusy?email=${userData.email}`)
-      .then((response) => {
-        const result = response.data.data.calendars[userData.email].busy;
-        // console.log('result', result)
-        const newResult = [...result];
-        // console.log('newResult', newResult)
-        setEvents(
-          newResult.map((event) => ({
-            ...event,
-            title: 'BUSY',
-            backgroundColor: 'rgba(0,0,0)',
-            color: 'black',
-          }))
-        );
-      })
-      .catch((error) => {
-        console.log('could not access events for calendar', error);
-      });
-  }, [userData.email]);
+    const loadInitialEvents = async () => {
+      const auth = await getAuth();
+      while (auth === null) {
+        auth = await getAuth();
+      }
+      const user = auth.currentUser;
+      if (user !== null) {
+        axios
+          .get(`api/freeBusy?email=${user.email}`)
+          .then((response) => {
+            const result = response.data.data.calendars[user.email].busy;
+            const newResult = [...result];
+            setEvents(
+              newResult.map((event) => ({
+                ...event,
+                title: 'BUSY',
+                backgroundColor: 'rgba(0,0,0)',
+                color: 'black',
+              }))
+            );
+          })
+          .catch((error) => {
+            console.log('could not access events for calendar', error);
+          });
+      }
+    };
+    loadInitialEvents();
+  }, []);
 
   return (
     <>
