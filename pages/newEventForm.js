@@ -25,10 +25,10 @@ export default function AddEvent () { // add userEmail as a prop
     )
   }
 
-  async function addEmail (confirmEmail) {
-    let friendExists = await emailExists(confirmEmail);
+  async function addEmail () {
+    let friendExists = await emailExists(email);
     if (friendExists) {
-      setAttendees([...attendees, { confirmEmail }]);
+      setAttendees([...attendees, { email }]);
       setEmail('');
     } else {
       alert('This person must first sign up for FreeTime for you to invite them.')
@@ -56,7 +56,7 @@ export default function AddEvent () { // add userEmail as a prop
 
    console.log(body);
    const token = getCookie('googleToken');
-   addEvent(token, 'bowersaaronjames@gmail.com', body); // replace hardcoded email with prop.userEmail
+   addEvent(token, 'FreeTime', body); // replace hardcoded email with prop.userEmail
  }
 
  return (
