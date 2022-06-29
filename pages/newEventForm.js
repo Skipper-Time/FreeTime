@@ -25,10 +25,10 @@ export default function AddEvent () { // add userEmail as a prop
     )
   }
 
-  async function addEmail () {
-    let friendExists = await emailExists(email);
+  async function addEmail (confirmEmail) {
+    let friendExists = await emailExists(confirmEmail);
     if (friendExists) {
-      setAttendees([...attendees, { email }]);
+      setAttendees([...attendees, { confirmEmail }]);
       setEmail('');
     } else {
       alert('This person must first sign up for FreeTime for you to invite them.')
@@ -45,11 +45,11 @@ export default function AddEvent () { // add userEmail as a prop
      summary,
      location,
      description,
-     'start': {
-       'dateTime': new Date(startDateTime).toISOString(),
+     start: {
+       dateTime: new Date(startDateTime).toISOString(),
      },
-     'end': {
-       'dateTime': new Date(endDateTime).toISOString(),
+     end: {
+       dateTime: new Date(endDateTime).toISOString(),
      },
      attendees,
    };
@@ -66,7 +66,7 @@ export default function AddEvent () { // add userEmail as a prop
        <br />
        <input
          type='text'
-         id='description'
+         id='summary'
          value={summary}
          onChange={e => setSummary(e.target.value)}
        />

@@ -1,4 +1,4 @@
-export const addEvent = (token, userEmail, calData) => {
+export const addEvent = (token, userEmail = 'FreeTime', calData) => {
   console.log(calData, token);
   const { summary, description, location, attendees, colorId, start, end } = calData;
 
