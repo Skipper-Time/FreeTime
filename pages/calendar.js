@@ -22,16 +22,16 @@ import { auth } from '../firebase/firebaseConfig';
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [events, setEvents] = useState(null);
+  const [events, setEvents] = useState([]);
   const btnRef = useRef();
   const [userData, setUserData] = useState({
-      displayName: 'Jessica Zhou',
-      email: 'jessicazhou541@gmail.com',
-      // profilePic: user.photoURL
+    displayName: 'Jessica Zhou',
+    email: 'jessicazhou541@gmail.com',
+    // profilePic: user.photoURL
   });
   const [friends, setFriends] = useState([
     'deitchdustin@gmail.com',
-    'hangyin2010@gmail.com'
+    'hangyin2010@gmail.com',
   ]);
 
   // const user = auth.currentUser;
@@ -42,45 +42,53 @@ export default function Home() {
   //     profilePic: user.photoURL
   //   })
   // }
-  const findMutualTime  = (email) => {
-    axios.get(`api/freeBusy?email=${email}`)
+  const findMutualTime = (email) => {
+    axios
+      .get(`api/freeBusy?email=${email}`)
       .then((response) => {
         const result = response.data.data.calendars[email].busy;
         // console.log('result', result)
         const newResult = [...result];
         // console.log('newResult', newResult)
-        setEvents(prevEvents => { // NOTE: this is layering events, not merging
-          return [...prevEvents, ...newResult.map((event) => ({
+        setEvents((prevEvents) => {
+          // NOTE: this is layering events, not merging
+          return [
+            ...prevEvents,
+            ...newResult.map((event) => ({
               ...event,
               title: 'BUSY',
               backgroundColor: 'rgba(0,0,0)',
-              color: 'black'
-            }))]
+              color: 'black',
+            })),
+          ];
         });
       })
-      .catch((error) =>{
-        console.log('could not access events for calendar', error)
-      })
-  }
+      .catch((error) => {
+        console.log('could not access events for calendar', error);
+      });
+  };
 
   useEffect(() => {
-    axios.get(`api/freeBusy?email=${userData.email}`)
+    axios
+      .get(`api/freeBusy?email=${userData.email}`)
       .then((response) => {
         const result = response.data.data.calendars[userData.email].busy;
         // console.log('result', result)
         const newResult = [...result];
         // console.log('newResult', newResult)
-        setEvents(newResult.map((event) => ({
-          ...event,
-          title: 'BUSY',
-          backgroundColor: 'rgba(0,0,0)',
-          color: 'black'
-        })));
+        setEvents(
+          newResult.map((event) => ({
+            ...event,
+            title: 'BUSY',
+            backgroundColor: 'rgba(0,0,0)',
+            color: 'black',
+          }))
+        );
       })
-      .catch((error) =>{
-        console.log('could not access events for calendar', error)
-      })
-    }, [userData.email]);
+      .catch((error) => {
+        console.log('could not access events for calendar', error);
+      });
+  }, [userData.email]);
 
   return (
     <>
@@ -121,9 +129,7 @@ export default function Home() {
           >
             Find Friends
           </Button>
-          <Box>
-            {events.length !== 0 && <Calendar events={events} />}
-          </Box>
+          <Box>{events.length !== 0 && <Calendar events={events} />}</Box>
         </Box>
       </Flex>
     </>
