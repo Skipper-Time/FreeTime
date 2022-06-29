@@ -32,11 +32,8 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [events, setEvents] = useState([]);
   const btnRef = useRef();
-  const [friends, setFriends] = useState([
-    'deitchdustin@gmail.com',
-    'hangyin2010@gmail.com',
-  ]);
-
+  const [friends, setFriends] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const findMutualTime = (email) => {
     axios
       .get(`api/freeBusy?email=${email}`)
@@ -110,6 +107,27 @@ export default function Home() {
               )
             );
           })
+          .then(() => {
+            const docRef = collection(db, 'user_cal_data');
+            return getDocs(docRef);
+          })
+          .then((userDocs) => {
+            const everyUser = [];
+            userDocs.forEach((doc) => {
+              if (user.email !== doc.id) {
+                const data = doc.data();
+                everyUser.push({
+                  email: doc.id,
+                  name: data.displayName || doc.id
+                });
+              }
+              setAllUsers(everyUser);
+              // console.log('userDoc', doc.data())
+            });
+            console.log('allUSERS', everyUser);
+            // console.log('USERDOC', userDocs.docs)
+
+          })
           .catch((error) => {
             console.log('could not access events for calendar', error);
           });
@@ -127,6 +145,7 @@ export default function Home() {
         friends={friends}
         setFriends={setFriends}
         findMutualTime={findMutualTime}
+        allUsers={allUsers}
       />
       <Flex
         bg="#E26D5C"
