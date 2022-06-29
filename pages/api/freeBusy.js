@@ -17,7 +17,7 @@ const queryDbForTokens = require('../../methods/queryDbForTokens');
 
 export default async function handler(req, res) {
   const email = req.query.email;
-  const timeRange = req.query.timeRage;
+  // const timeRange = req.query.timeRage;
 
   // TODO Fetch refresh token, access token from firebase Db
   // instead of from cookie
