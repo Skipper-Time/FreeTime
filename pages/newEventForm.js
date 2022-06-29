@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { addEvent } from '../methods/addEvent.js';
 import { getCookie, getCookies } from 'cookies-next';
 import emailExists from '../methods/emailExists.js';
+import axios from 'axios';
 
 export default function AddEvent () { // add userEmail as a prop
   let [summary, setSummary] = useState('');
@@ -39,7 +39,7 @@ export default function AddEvent () { // add userEmail as a prop
     e.preventDefault();
     //  console.log(summary, description, location, startDateTime, endDateTime);
     //  console.log('2022-06-27T16:40:00-07:00', new Date(startDateTime).toISOString());
-    console.log(attendees);
+    // console.log(attendees);
 
    let body = {
      summary,
@@ -54,9 +54,9 @@ export default function AddEvent () { // add userEmail as a prop
      attendees,
    };
 
-   console.log(body);
+  //  console.log(body);
    const token = getCookie('googleToken');
-   addEvent(token, 'FreeTime', body); // replace hardcoded email with prop.userEmail
+   axios.post('/api/addEvent?email=bowersaaronjames@gmail.com', body);
  }
 
  return (
