@@ -22,8 +22,8 @@ export default async function handler(req, res) {
   // TODO Fetch refresh token, access token from firebase Db
   // instead of from cookie
   const tokens = await queryDbForTokens(email);
-  const refreshToken = getCookie('refreshToken', {req, res});
-  const accessToken = getCookie('accessToken', {req, res});
+  const refreshToken = tokens.refreshToken;
+  const accessToken = tokens.accessToken;
 
   // Set the credentials to the current person by adding the tokens to client
   oAuth2Client.setCredentials({
