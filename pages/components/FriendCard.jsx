@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Flex, Box, Image, Text } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, CheckIcon } from '@chakra-ui/icons';
 
-const FriendCard = () => {
+const FriendCard = ({
+  name,
+  location,
+  email,
+  fullEmail,
+  findMutualTime,
+  setFriends,
+  isInvited,
+}) => {
+  const handleAdd = () => {
+    if (!isInvited) {
+      findMutualTime(fullEmail);
+      setFriends((prevFriends) =>
+        prevFriends.map((friend) => {
+          if (friend.fullEmail === fullEmail) {
+            friend.isInvited = true;
+          }
+          return friend;
+        })
+      );
+    }
+  };
   return (
     <Flex
       borderWidth="1px"
@@ -35,15 +56,16 @@ const FriendCard = () => {
           border="black 2px solid"
           alignContent="center"
           _hover={{ cursor: 'pointer' }}
+          onClick={handleAdd}
         >
-          <AddIcon m="auto" />
+          {isInvited ? <CheckIcon m="auto" /> : <AddIcon m="auto" />}
         </Flex>
         <Text as="b" alignSelf="start">
-          John Doe
+          {name}
         </Text>
-        <Text alignSelf="start">@johndoe</Text>
+        <Text alignSelf="start">{`@${email}`}</Text>
         <Text alignSelf="start" as="i">
-          Los Angeles, CA
+          {location}
         </Text>
       </Flex>
     </Flex>

@@ -68,7 +68,10 @@ const getCalendarList = (token) => {
   }
 
   fetch(url, {headers: headers})
-    .then(res => res.json())
+    .then(res => {
+      console.log('CALENDAR LIST:', res)
+      res.json()
+    })
     .then(json => getFreeBusyForWeek(json, token))
     .catch(error => console.log('this error', error))
 }
