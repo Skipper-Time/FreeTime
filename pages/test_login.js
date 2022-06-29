@@ -15,6 +15,7 @@ export default function Home() {
   const [signupOrLogin, setSignupOrLogin] = useState(null);
 
   const googleLogin = useGoogleLogin({
+    scope: 'https://www.googleapis.com/auth/calendar',
     onSuccess: async ({ code }) => {
       try {
         const tokens = await axios.post('/api/auth/google', { code });
