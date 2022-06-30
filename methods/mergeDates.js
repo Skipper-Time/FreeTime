@@ -11,11 +11,14 @@
 //   "end": "2022-07-01T19:50:00Z"
 //   }
 // ]
-const getFreeTime = (startDate, busySlots) => {
+const getFreeTime = (busySlots) => {
   // busySlots will be the data we get from google API, which will show the busy
   // and free time, below is a sample data for test now and will be replaced with
   // response.calendar.busy from google API;
   var numberOfDays = 7;
+  let today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let startDate = today.toISOString();
   startDate = new Date(startDate);
 
   // differenceInDays to calculate days between two dates
