@@ -42,6 +42,7 @@ const NewEventModal = ({
   events,
   eventInfo,
   friends,
+  findMutualTime,
 }) => {
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');

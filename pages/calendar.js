@@ -38,6 +38,7 @@ export default function Home() {
   const [allUsers, setAllUsers] = useState([]);
   const [eventInfo, setEventInfo] = useState({});
   const [userEmail, setUserEmail] = useState('');
+
   const findMutualTime = (email) => {
     axios
       .get(`api/freeBusy?email=${email}`)
@@ -154,6 +155,7 @@ export default function Home() {
         eventInfo={eventInfo}
         friends={friends}
         userEmail={userEmail}
+        findMutualTime={findMutualTime}
       />
       <FriendsDrawer
         btnRef={btnRef}
