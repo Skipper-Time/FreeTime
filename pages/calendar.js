@@ -118,7 +118,7 @@ export default function Home() {
                 const data = doc.data();
                 everyUser.push({
                   email: doc.id,
-                  name: data.displayName || doc.id
+                  name: data.displayName || doc.id,
                 });
               }
               setAllUsers(everyUser);
@@ -126,7 +126,6 @@ export default function Home() {
             });
             console.log('allUSERS', everyUser);
             // console.log('USERDOC', userDocs.docs)
-
           })
           .catch((error) => {
             console.log('could not access events for calendar', error);
@@ -169,7 +168,7 @@ export default function Home() {
         <Box
           p="3rem 3rem 3rem 3rem"
           bg="white"
-          w="800px"
+          w="1200px"
           mt="4rem"
           borderRadius="12px"
           style={{ filter: 'drop-shadow(10px 10px 10px rgba(0,0,0,0.2))' }}
