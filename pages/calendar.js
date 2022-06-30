@@ -37,6 +37,7 @@ export default function Home() {
   const [friends, setFriends] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [eventInfo, setEventInfo] = useState({});
+  const [userEmail, setUserEmail] = useState('');
   const findMutualTime = (email) => {
     axios
       .get(`api/freeBusy?email=${email}`)
@@ -79,6 +80,7 @@ export default function Home() {
           .then((response) => {
             const result = response.data.data.calendars[user.email].busy;
             const newResult = [...result];
+            setUserEmail(user.email);
             setEvents(
               newResult.map((event) => ({
                 ...event,
@@ -151,6 +153,7 @@ export default function Home() {
         onEventClose={onEventClose}
         eventInfo={eventInfo}
         friends={friends}
+        userEmail={userEmail}
       />
       <FriendsDrawer
         btnRef={btnRef}
