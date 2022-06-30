@@ -115,8 +115,10 @@ const NewEventModal = ({
 
     // console.log(body);
     axios.post(`/api/addEvent?email=${userEmail}`, body)
-      .then(res => console.log(res.body))
-      .catch(err => console.log(`Adding the event didn't work because of `, err));
+      .then(res => {
+        return onEventClose();
+      })
+      .catch(err => err)
   };
 
   return (

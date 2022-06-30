@@ -8,10 +8,10 @@ const queryDbForTokens = require('../../methods/queryDbForTokens');
 export default async function handler (req, res) {
   const email = req.query.email;
   const body = req.body;
-  console.log('BODY!!!!!!!!', body);
+  // console.log('BODY!!!!!!!!', body);
 
   const calendarId = await queryDbForFreeTimeEmail(email);
-  console.log('calId!!!!!!!!', calendarId);
+  // console.log('calId!!!!!!!!', calendarId);
 
   const tokens = await queryDbForTokens(email);
   const refreshToken = tokens.refreshToken;
@@ -33,4 +33,6 @@ export default async function handler (req, res) {
     calendarId: calendarId,
     resource: body,
   });
+
+  res.status(201).send('successful');
 }
