@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import Moment from 'react-moment';
 import { nanoid } from 'nanoid';
+import InvitedFriends from './InvitedFriends';
 
 const allIntervals = [];
 allIntervals.push(`12:00 AM`);
@@ -35,7 +36,13 @@ for (let i = 1; i <= 11; i++) {
   allIntervals.push(`${i}:30 PM`);
 }
 
-const NewEventModal = ({ isEventOpen, onEventClose, events, eventInfo }) => {
+const NewEventModal = ({
+  isEventOpen,
+  onEventClose,
+  events,
+  eventInfo,
+  friends,
+}) => {
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');
   const [location, setSelectedLocation] = useState('');
@@ -96,8 +103,12 @@ const NewEventModal = ({ isEventOpen, onEventClose, events, eventInfo }) => {
       {console.log('EVENT', events)}
       <ModalOverlay />
       <ModalContent bg="white" borderRadius="16px" p="3rem 1rem">
-        <ModalHeader>
-          <Center fontSize="xl"> Event Info </Center>
+        <ModalHeader mb="-1rem">
+          <Center fontSize="xl" mb="1rem">
+            {' '}
+            Event Info{' '}
+          </Center>
+          <InvitedFriends friends={friends} />
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -119,10 +130,6 @@ const NewEventModal = ({ isEventOpen, onEventClose, events, eventInfo }) => {
                 value={location}
               />
               <FormLabel>Location</FormLabel>
-            </FormControl>
-            <FormControl variant="floating">
-              <Input name="att" placeholder=" " />
-              <FormLabel>Attendees</FormLabel>
             </FormControl>
             <FormControl variant="floating">
               <Textarea
