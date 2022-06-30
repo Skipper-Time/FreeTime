@@ -34,5 +34,5 @@ export default async function handler (req, res) {
     resource: body,
   });
 
-  res.status(201).send('successful');
+  res.status(201).send('successfully added freetime event');
 }
