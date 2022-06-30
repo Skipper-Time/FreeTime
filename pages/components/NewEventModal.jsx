@@ -45,6 +45,7 @@ const NewEventModal = ({
   friends,
   findMutualTime,
   userEmail,
+  freeTimeEmail,
 }) => {
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');
@@ -53,7 +54,7 @@ const NewEventModal = ({
   const [selectedEnd, setSelectedEnd] = useState('12:00 PM');
   const attendeeEmails = friends.filter(friend => {
     if (friend.isInvited) return friend;
-  }).map(attendee => {return {email: attendee.fullEmail}});
+  }).map(attendee => {return {email: attendee.freeTimeEmail}});
    console.log("INVITED ATTENDEES", attendeeEmails)
 
   const startElements = allIntervals.map((interval) => (
@@ -117,6 +118,7 @@ const NewEventModal = ({
     // console.log(body);
     axios.post(`/api/addEvent?email=${userEmail}`, body)
       .then(res => {
+        findMutualTime(userEmail, freeTimeEmail);
         return onEventClose();
       })
       .catch(err => err)
