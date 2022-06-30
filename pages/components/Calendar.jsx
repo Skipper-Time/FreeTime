@@ -3,10 +3,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { useRef } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
-import EventModal from './EventModal'
+import NewEventModal from './NewEventModal';
 import { useState } from 'react';
 
-const Calendar = ({events}) => {
+const Calendar = ({ events }) => {
   // Modal functionality for EventModal
   const {
     isOpen: isEventOpen,
@@ -15,7 +15,7 @@ const Calendar = ({events}) => {
   } = useDisclosure();
 
   // Holds information for inside EventModal
-  const [eventInfo, setEventInfo] = useState({})
+  const [eventInfo, setEventInfo] = useState({});
 
   // console.log('events', events ? events : 'events is null')
   // console.log('EVENTS', events)
@@ -44,30 +44,32 @@ const Calendar = ({events}) => {
   };
   return (
     <>
-    <FullCalendar
-      theme={true}
-      ref={calendarRef}
-      plugins={[timeGridPlugin, interactionPlugin]}
-      selectable
-      dateClick={handleDateClick}
-      eventClick={(arg) => {
-        setEventInfo(
-          {
+      <FullCalendar
+        theme={true}
+        ref={calendarRef}
+        plugins={[timeGridPlugin, interactionPlugin]}
+        selectable
+        slotMinTime="8:00:00"
+        slotMaxTime="23:00:00"
+        dateClick={handleDateClick}
+        eventClick={(arg) => {
+          setEventInfo({
             title: arg.event.title,
             start: arg.event.start,
-            end: arg.event.end
-          })
-        onEventOpen()
-        // alert(arg.event.title);
-        // alert(arg.event.start);
-      }}
-      events={events}
-    />
-    <EventModal
-     events={events}
-     isEventOpen={isEventOpen}
-     onEventClose={onEventClose}
-     eventInfo={eventInfo}/>
+            end: arg.event.end,
+          });
+          onEventOpen();
+          // alert(arg.event.title);
+          // alert(arg.event.start);
+        }}
+        events={events}
+      />
+      <NewEventModal
+        events={events}
+        isEventOpen={isEventOpen}
+        onEventClose={onEventClose}
+        eventInfo={eventInfo}
+      />
     </>
   );
 };
