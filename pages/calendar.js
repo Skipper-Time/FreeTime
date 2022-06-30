@@ -97,7 +97,7 @@ export default function Home() {
                   const friendQuery = await getDoc(docRef);
                   const friendData = friendQuery.data();
 
-                  console.log(friendData);
+                  console.log('friendData', friendData);
 
                   return {
                     name: friendData.displayName,
