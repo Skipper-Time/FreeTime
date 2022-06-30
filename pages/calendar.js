@@ -45,8 +45,8 @@ export default function Home() {
             ...prevEvents,
             ...newResult.map((event) => ({
               ...event,
-              title: 'BUSY',
-              backgroundColor: 'rgba(0,0,0)',
+              title: '~FREE~ 🫡',
+              backgroundColor: '#723D46',
               color: 'black',
             })),
           ];
@@ -73,8 +73,8 @@ export default function Home() {
             setEvents(
               newResult.map((event) => ({
                 ...event,
-                title: 'BUSY',
-                backgroundColor: 'rgba(0,0,0)',
+                title: '~FREE~ 🫡',
+                backgroundColor: '#723D46',
                 color: 'black',
               }))
             );
