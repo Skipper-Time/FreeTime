@@ -16,8 +16,6 @@ import {
   Link,
 } from '@chakra-ui/react';
 
-
-
 import { useRouter } from 'next/router'
 
 import { setCookies } from 'cookies-next';
@@ -50,6 +48,20 @@ const SignUpModal = ({ isSignupOpen, onSignupClose }) => {
         const user = await signInWithCredential(auth, credential);
 
         const userRef = doc(db, 'user_cal_data', user.user.email);
+        // ADD freetime calendar here using their email and access token
+        const headers = {
+          'Authorization': 'Bearer ' + accessToken,
+        }
+
+        const addCalUrl = `https://www.googleapis.com/calendar/v3/calendars`;
+        const addCalBody = { summary: 'freetime' }
+
+        axios.post(addCalUrl, addCalBody, { headers: headers })
+          .then(res => {
+            console.log('THIS IS RESULT OF POST', res.data)
+
+          })
+          .catch(err => console.log("nice try....", err));
 
         // TODO check if the account exists
         // this is a problem because on line 41 a token is automatically

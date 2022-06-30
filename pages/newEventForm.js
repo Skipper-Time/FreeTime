@@ -26,13 +26,13 @@ export default function AddEvent () { // add userEmail as a prop
   }
 
   async function addEmail () {
-    let friendExists = await emailExists(email);
-    if (friendExists) {
+    // let friendExists = await emailExists(email);
+    // if (friendExists) {
       setAttendees([...attendees, { email }]);
       setEmail('');
-    } else {
-      alert('This person must first sign up for FreeTime for you to invite them.')
-    }
+    // } else {
+    //   alert('This person must first sign up for FreeTime for you to invite them.')
+    // }
   }
 
   const handleSubmit = (e) => {

@@ -25,7 +25,7 @@ export default async function handler (req, res) {
 
   const event = await calendar.events.insert({
     auth: oAuth2Client,
-    calendarId: 'primary',
+    calendarId: '6l2kp84j5c1umogma09hnu3hkg@group.calendar.google.com',
     resource: body,
   });
 
