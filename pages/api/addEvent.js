@@ -28,6 +28,4 @@ export default async function handler (req, res) {
     calendarId: '6l2kp84j5c1umogma09hnu3hkg@group.calendar.google.com',
     resource: body,
   });
-
-  console.log('EVENT!!!!!!!!!!!!!', event.data);
 }
