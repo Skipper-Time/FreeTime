@@ -58,10 +58,13 @@ const SignUpModal = ({ isSignupOpen, onSignupClose }) => {
 
         axios.post(addCalUrl, addCalBody, { headers: headers })
           .then(res => {
-            console.log('THIS IS RESULT OF POST', res.data)
-
+            const freeTimeEmail = res.data.id;
+            const userRef = doc(db, 'user_cal_data', user.user.email);
+            setDoc(userRef, {
+              freeTimeEmail: freeTimeEmail,
+            }, { merge: true });
           })
-          .catch(err => console.log("nice try....", err));
+          .catch(err => console.log(err));
 
         const locations = {
           'Aaron Bowers': 'Las Vegas, NV',
