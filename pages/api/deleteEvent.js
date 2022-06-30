@@ -1,25 +1,33 @@
+import { calendar_v3, google } from "googleapis";
+import oAuth2Client from '../../firebase/oAuthConfig';
 import { getCookie } from 'cookies-next';
-import axios from 'axios';
 
-// axios.delete(`api/deleteEvent?eventId=eventId`) will lead to this file
+const queryDbForTokens = require('../../methods/queryDbForTokens');
 
 export default async function handler(req, res) {
+  const email = req.query.email;
   const eventId = req.query.eventId;
-  const token = getCookie('googleToken');
 
-  axios.delete(`https://www.googleapis.com/calendar/v3/calendars/freetime
-  /events/${eventId}`, {
-    headers: {
-      'Authorization': 'Bearer' + token,
-      'Content-Type': 'application/json'
-    }
+  const tokens = await queryDbForTokens(email);
+  const refreshToken = tokens.refreshToken;
+  const accessToken = tokens.accessToken;
+
+  oAuth2Client.setCredentials({
+    refresh_token: refreshToken,
+    access_token: accessToken,
+  });
+
+  const calendar = google.calendar({
+      version: "v3",
+      auth: oAuth2Client,
+  });
+
+  const deleteEvent = await calendar.events.delete({
+    auth: oAuth2Client,
+    calendarId: 'FreeTime',
+    eventId: eventId
   })
-  // If successful, this method returns an empty response body.
-  .then(() => res.status(200).send('successfully deleted'));
 
-
-
-
-
+  // res.status(200).json(freeBusy);
 
 }
