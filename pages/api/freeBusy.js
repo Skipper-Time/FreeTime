@@ -48,6 +48,8 @@ export default async function handler(req, res) {
 
   const calendarList = await calendar.calendarList.list();
 
+  console.log('CALENDAR LIST', calendarList.data.items);
+
   const freeBusy = await calendar.freebusy.query({
     requestBody: {
       timeMin: timeMin,
