@@ -43,7 +43,7 @@ const Calendar = ({
           getFreeTime(events).map((event) => ({
               ...event,
               title: '~FREE~ 🫡',
-              backgroundColor: '#A5B1FE',
+              backgroundColor: '#8E9EEB',
               color: 'black',
             }))
           }

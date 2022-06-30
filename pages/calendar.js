@@ -128,6 +128,8 @@ export default function Home() {
                 }))
               );
 
+              const docRef = doc(db, 'user_cal_data', user.email)
+
               return getDoc(docRef);
             })
             .then(async (data) => {
@@ -205,7 +207,7 @@ export default function Home() {
         allUsers={allUsers}
       />
       <Flex
-        bg="#E26D5C"
+        bg="#525E46"
         justify="space-between"
         gap="1rem"
         w="100%"
@@ -222,7 +224,7 @@ export default function Home() {
           </Link>
         </Box>
       </Flex>
-      <Flex justify="center" bg="#f6f3f3">
+      <Flex justify="center" bg="#6D7D5D">
         <Box
           p="3rem 3rem 3rem 3rem"
           bg="white"
@@ -235,7 +237,7 @@ export default function Home() {
             ref={btnRef}
             onClick={onOpen}
             mb="1rem"
-            bg="#E26D5C"
+            bg="#4B593D"
             color="#f6f3f3"
           >
             Find Friends
