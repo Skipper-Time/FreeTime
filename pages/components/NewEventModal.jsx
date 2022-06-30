@@ -21,6 +21,7 @@ import {
 import Moment from 'react-moment';
 import { nanoid } from 'nanoid';
 import InvitedFriends from './InvitedFriends';
+import axios from 'axios';
 
 const allIntervals = [];
 allIntervals.push(`12:00 AM`);
@@ -42,12 +43,17 @@ const NewEventModal = ({
   events,
   eventInfo,
   friends,
+  userEmail,
 }) => {
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');
   const [location, setSelectedLocation] = useState('');
   const [selectedStart, setSelectedStart] = useState('12:00 PM');
   const [selectedEnd, setSelectedEnd] = useState('12:00 PM');
+  const attendeeEmails = friends.filter(friend => {
+    if (friend.isInvited) return friend;
+  }).map(attendee => {return {email: attendee.fullEmail}});
+   console.log("INVITED ATTENDEES", attendeeEmails)
 
   const startElements = allIntervals.map((interval) => (
     <option key={nanoid()} value={interval}>
@@ -92,8 +98,29 @@ const NewEventModal = ({
   };
 
   const handleSubmit = () => {
-    console.log(convertDate(selectedStart));
+    // console.log(convertDate(selectedStart));
+
+    let body = {
+      summary: name,
+      location: location,
+      description: details,
+      start: {
+        dateTime: convertDate(selectedStart).toISOString(),
+      },
+      end: {
+        dateTime: convertDate(selectedEnd).toISOString(),
+      },
+      attendees: attendeeEmails,
+    };
+
+    // console.log(body);
+    axios.post(`/api/addEvent?email=${userEmail}`, body)
+      .then(res => {
+        return onEventClose();
+      })
+      .catch(err => err)
   };
+
   return (
     // Need to render only for created events not for busy events.
     // The fact that this needs to happen scares and confuses me...
