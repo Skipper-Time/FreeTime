@@ -72,7 +72,8 @@ const SignUpModal = ({ isSignupOpen, onSignupClose }) => {
           'Jessica Zhou': 'Sierra Vista, AZ',
           'Dustin Deitch': 'Reno, NV',
           'Jordan Sweet': 'San Diego, CA',
-          'Hang Yin': 'Seattle, WA'
+          'Hang Yin': 'Seattle, WA',
+          'Donna Szeto': 'San Fransisco, CA'
         }
 
         const userInstance = collection(db, 'user_cal_data');
