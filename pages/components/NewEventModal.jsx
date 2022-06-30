@@ -21,6 +21,7 @@ import {
 import Moment from 'react-moment';
 import { nanoid } from 'nanoid';
 import InvitedFriends from './InvitedFriends';
+import axios from 'axios';
 
 const allIntervals = [];
 allIntervals.push(`12:00 AM`);
@@ -42,12 +43,19 @@ const NewEventModal = ({
   events,
   eventInfo,
   friends,
+  userEmail,
 }) => {
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');
   const [location, setSelectedLocation] = useState('');
   const [selectedStart, setSelectedStart] = useState('12:00 PM');
   const [selectedEnd, setSelectedEnd] = useState('12:00 PM');
+  const attendees = friends.filter(friend => {
+    if (friend.isInvited) {
+      return { email: friend.fullEmail}
+    }
+  })
+
 
   const startElements = allIntervals.map((interval) => (
     <option key={nanoid()} value={interval}>
@@ -92,8 +100,25 @@ const NewEventModal = ({
   };
 
   const handleSubmit = () => {
-    console.log(convertDate(selectedStart));
+    // console.log(convertDate(selectedStart));
+    console.log(attendees);
+
+    let body = {
+      summary: name,
+      location,
+      description,
+      start: {
+        dateTime: new Date(startDateTime).toISOString(),
+      },
+      end: {
+        dateTime: new Date(endDateTime).toISOString(),
+      },
+      attendees,
+    };
+
+    axios.post(`/api/addEvent?email=${userEmail}`, body);
   };
+
   return (
     // Need to render only for created events not for busy events.
     // The fact that this needs to happen scares and confuses me...

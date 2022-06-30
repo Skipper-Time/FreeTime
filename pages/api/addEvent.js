@@ -7,6 +7,7 @@ const queryDbForTokens = require('../../methods/queryDbForTokens');
 export default async function handler (req, res) {
   const email = req.query.email;
   const body = req.body;
+  const calId = req.query.calId;
   // console.log('BODY:       ', body);
 
   const tokens = await queryDbForTokens(email);
@@ -22,6 +23,8 @@ export default async function handler (req, res) {
     version: "v3",
     auth: oAuth2Client,
   });
+
+
 
   const event = await calendar.events.insert({
     auth: oAuth2Client,
