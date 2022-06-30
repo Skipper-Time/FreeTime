@@ -111,6 +111,7 @@ export default function Home() {
                     email: email.split('@')[0],
                     fullEmail: email,
                     location: friendData.location,
+                    profilePic: friendData.profilePic,
                     isInvited: false,
                   };
                 })
@@ -129,12 +130,13 @@ export default function Home() {
                 everyUser.push({
                   email: doc.id,
                   name: data.displayName || doc.id,
+                  profilePic: data.profilePic
                 });
               }
               setAllUsers(everyUser);
               // console.log('userDoc', doc.data())
             });
-            console.log('allUSERS', everyUser);
+            // console.log('allUSERS', everyUser);
             // console.log('USERDOC', userDocs.docs)
           })
           .catch((error) => {

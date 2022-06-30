@@ -16,12 +16,14 @@ const FindFriends = ({ allUsers }) => {
       friend.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
   )
   .map((user, i) => {
-    console.log('user in card', user)
+    // console.log('user in card', user)
+    console.log('user', user)
     return (
       <UserCard
         key={i}
         name={user.name}
         email={user.email}
+        profilePic={user.profilePic}
       />
     );
   });
