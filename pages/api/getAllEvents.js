@@ -6,7 +6,7 @@
 
 // export default async function handler(req, res) {
 //   const email = req.query.email;
-//   const eventId = req.query.eventId;
+//   const cal = 'FreeTime';
 
 //   const tokens = await queryDbForTokens(email);
 //   const refreshToken = tokens.refreshToken;
@@ -22,11 +22,19 @@
 //       auth: oAuth2Client,
 //   });
 
-//   const deleteEvent = await calendar.events.delete({
+//   const eventsList = await calendar.events.list({
 //     auth: oAuth2Client,
 //     calendarId: 'FreeTime',
-//     eventId: eventId
-//   })
+//   });
+
+//   // const freeBusy = await calendar.freebusy.query({
+//   //   requestBody: {
+//   //     timeMin: timeMin,
+//   //     timeMax: timeMax,
+//   //     timeZone: 'PST',
+//   //     items: calendarList.data.items
+//   // }});
+
 
 //   // res.status(200).json(freeBusy);
 

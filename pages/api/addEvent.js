@@ -33,6 +33,4 @@ export default async function handler (req, res) {
     calendarId: calendarId,
     resource: body,
   });
-
-  console.log('EVENT!!!!!!!!!!!!!', event.data);
 }
