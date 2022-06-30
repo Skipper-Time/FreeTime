@@ -27,6 +27,8 @@ import {
   getDocs,
   doc,
 } from 'firebase/firestore';
+import InvitedFriends from './components/InvitedFriends';
+import NewEventModal from './components/NewEventModal';
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,6 +36,7 @@ export default function Home() {
   const btnRef = useRef();
   const [friends, setFriends] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [eventInfo, setEventInfo] = useState({});
   const findMutualTime = (email) => {
     axios
       .get(`api/freeBusy?email=${email}`)
@@ -45,8 +48,8 @@ export default function Home() {
             ...prevEvents,
             ...newResult.map((event) => ({
               ...event,
-              title: 'BUSY',
-              backgroundColor: 'rgba(0,0,0)',
+              title: '~FREE~ 🫡',
+              backgroundColor: '#723D46',
               color: 'black',
             })),
           ];
@@ -56,6 +59,12 @@ export default function Home() {
         console.log('could not access events for calendar', error);
       });
   };
+
+  const {
+    isOpen: isEventOpen,
+    onOpen: onEventOpen,
+    onClose: onEventClose,
+  } = useDisclosure();
 
   useEffect(() => {
     const loadInitialEvents = async () => {
@@ -73,13 +82,12 @@ export default function Home() {
             setEvents(
               newResult.map((event) => ({
                 ...event,
-                title: 'BUSY',
-                backgroundColor: 'rgba(0,0,0)',
+                title: '~FREE~ 🫡',
+                backgroundColor: '#723D46',
                 color: 'black',
               }))
             );
 
-            // update friends state with provided auth email
             const docRef = doc(db, 'user_cal_data', user.email);
 
             return getDoc(docRef);
@@ -137,6 +145,13 @@ export default function Home() {
 
   return (
     <>
+      <NewEventModal
+        events={events}
+        isEventOpen={isEventOpen}
+        onEventClose={onEventClose}
+        eventInfo={eventInfo}
+        friends={friends}
+      />
       <FriendsDrawer
         btnRef={btnRef}
         isOpen={isOpen}
@@ -182,17 +197,18 @@ export default function Home() {
           >
             Find Friends
           </Button>
-          <Flex gap="0.8rem" mb="1rem">
-            {friends.length > 0 &&
-              friends
-                .filter((friend) => friend.isInvited === true)
-                .map((friend) => (
-                  <Button colorScheme="facebook" key={friend.name}>
-                    {friend.name}
-                  </Button>
-                ))}
-          </Flex>
-          <Box>{events.length !== 0 && <Calendar events={events} />}</Box>
+          <InvitedFriends friends={friends} />
+          <Box>
+            {events.length !== 0 && (
+              <Calendar
+                events={events}
+                friends={friends}
+                onEventOpen={onEventOpen}
+                eventInfo={eventInfo}
+                setEventInfo={setEventInfo}
+              />
+            )}
+          </Box>
         </Box>
       </Flex>
     </>
