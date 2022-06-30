@@ -50,12 +50,10 @@ const NewEventModal = ({
   const [location, setSelectedLocation] = useState('');
   const [selectedStart, setSelectedStart] = useState('12:00 PM');
   const [selectedEnd, setSelectedEnd] = useState('12:00 PM');
-  const attendees = friends.filter(friend => {
-    if (friend.isInvited) {
-      return { email: friend.fullEmail}
-    }
-  })
-
+  const attendeeEmails = friends.filter(friend => {
+    if (friend.isInvited) return friend;
+  }).map(attendee => {return {email: attendee.fullEmail}});
+   console.log("INVITED ATTENDEES", attendeeEmails)
 
   const startElements = allIntervals.map((interval) => (
     <option key={nanoid()} value={interval}>
@@ -101,22 +99,24 @@ const NewEventModal = ({
 
   const handleSubmit = () => {
     // console.log(convertDate(selectedStart));
-    console.log(attendees);
 
     let body = {
       summary: name,
-      location,
-      description,
+      location: location,
+      description: details,
       start: {
-        dateTime: new Date(startDateTime).toISOString(),
+        dateTime: convertDate(selectedStart).toISOString(),
       },
       end: {
-        dateTime: new Date(endDateTime).toISOString(),
+        dateTime: convertDate(selectedEnd).toISOString(),
       },
-      attendees,
+      attendees: attendeeEmails,
     };
 
-    axios.post(`/api/addEvent?email=${userEmail}`, body);
+    // console.log(body);
+    axios.post(`/api/addEvent?email=${userEmail}`, body)
+      .then(res => console.log(res.body))
+      .catch(err => console.log(`Adding the event didn't work because of `, err));
   };
 
   return (
