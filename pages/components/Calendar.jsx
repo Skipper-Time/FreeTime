@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import NewEventModal from './NewEventModal';
 import { useState } from 'react';
+import getFreeTime from '../../methods/mergeDates';
 
 const Calendar = ({
   events,
@@ -38,10 +39,18 @@ const Calendar = ({
           // alert(arg.event.title);
           // alert(arg.event.start);
         }}
-        events={events}
+        events={
+          getFreeTime(events).map((event) => ({
+              ...event,
+              title: '~FREE~ 🫡',
+              backgroundColor: '#A5B1FE',
+              color: 'black',
+            }))
+          }
       />
     </>
   );
 };
 
 export default Calendar;
+
