@@ -33,7 +33,12 @@ a {
   border: 3px solid var(--custom-white);
 }
 
-
 .fc-timegrid-event {
-  border-color: black !important;
+  border-color: transparent !important;
+  color: black !important;
+  transition: 0.3s;
+}
+.fc-timegrid-event:hover {
+  cursor: pointer;
+  transform: scale(1.03);
 }
