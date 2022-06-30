@@ -19,6 +19,7 @@ const FriendsList = ({ friends, setFriends, findMutualTime }) => {
         <FriendCard
           key={i}
           name={friend.name}
+          profilePic={friend.profilePic}
           location={friend.location}
           email={friend.email}
           fullEmail={friend.fullEmail}

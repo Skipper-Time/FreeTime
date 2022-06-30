@@ -6,6 +6,7 @@ const FriendCard = ({
   name,
   location,
   email,
+  profilePic,
   fullEmail,
   findMutualTime,
   setFriends,
@@ -24,6 +25,7 @@ const FriendCard = ({
       );
     }
   };
+  console.log('KJWEHKFWJELKFJ', profilePic)
   return (
     <Flex
       borderWidth="1px"
@@ -33,7 +35,7 @@ const FriendCard = ({
       mb=".5rem"
     >
       <Image
-        src="./google-logo.png"
+        src={profilePic}
         alt=""
         borderRadius="full"
         w="64px"
