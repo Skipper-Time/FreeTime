@@ -5,6 +5,7 @@ import { AddIcon, CheckIcon } from '@chakra-ui/icons';
 const UserCard = ({
   name,
   email,
+  profilePic
 }) => {
   const [isInvited, setIsInvited] = useState(false);
 
@@ -13,6 +14,7 @@ const UserCard = ({
       console.log('hello world')
     }
   };
+  console.log('profile pic', profilePic)
   return (
     <Flex
       borderWidth="1px"
@@ -22,7 +24,7 @@ const UserCard = ({
       mb=".5rem"
     >
       <Image
-        src="./google-logo.png"
+        src={profilePic  || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'}
         alt=""
         borderRadius="full"
         w="64px"
