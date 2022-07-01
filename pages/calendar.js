@@ -29,6 +29,7 @@ import {
 } from 'firebase/firestore';
 import InvitedFriends from './components/InvitedFriends';
 import NewEventModal from './components/NewEventModal';
+import EventModal from './components/EventModal';
 import queryDbForFreeTimeEmail from '../methods/queryDbForFreeTimeEmail';
 import { useRouter } from 'next/router'
 
@@ -104,6 +105,13 @@ export default function Home() {
     onOpen: onEventOpen,
     onClose: onEventClose,
   } = useDisclosure();
+
+  const {
+    isOpen: isDetailsOpen,
+    onOpen: onDetailsOpen,
+    onClose: onDetailsClose,
+  } = useDisclosure();
+
   useEffect(() => {
     const loadInitialEvents = async (user) => {
       const getFreeEmail = async () => {
@@ -182,8 +190,9 @@ export default function Home() {
           .then((response) => {
             return axios.get(`api/freeTimeEvents?email=${user.email}`)
           })
-          .then((response) => {
-           //  console.log('RESPONSE', response.data)
+          .then(async (response) => {
+            console.log('RESPONSE', response.data)
+
             const newResult = response.data
             setBookedFreeTime((prevEvents) => {
               return [
@@ -219,6 +228,16 @@ export default function Home() {
         events={events}
         isEventOpen={isEventOpen}
         onEventClose={onEventClose}
+        eventInfo={eventInfo}
+        friends={friends}
+        userEmail={userEmail}
+        findMutualTime={findMutualTime}
+        freeTimeEmail={freeTimeEmail}
+      />
+      <EventModal
+        events={events}
+        isDetailsOpen={isDetailsOpen}
+        onDetailsClose={onDetailsClose}
         eventInfo={eventInfo}
         friends={friends}
         userEmail={userEmail}
@@ -282,6 +301,7 @@ export default function Home() {
                 eventInfo={eventInfo}
                 setEventInfo={setEventInfo}
                 bookedFreeTime={bookedFreeTime}
+                onDetailsOpen={onDetailsOpen}
               />
             )}
           </Box>
