@@ -26,7 +26,8 @@ import axios from 'axios';
 const allIntervals = [];
 // allIntervals.push(`12:00 AM`);
 // allIntervals.push(`12:30 AM`);
-for (let i = 8; i <= 11; i++) {
+allIntervals.push(`8:30 AM`);
+for (let i = 9; i <= 11; i++) {
   allIntervals.push(`${i}:00 AM`);
   allIntervals.push(`${i}:30 AM`);
 }
@@ -52,14 +53,18 @@ const NewEventModal = ({
   const [location, setSelectedLocation] = useState('');
   const [selectedStart, setSelectedStart] = useState('3:00 PM');
   const [selectedEnd, setSelectedEnd] = useState('3:00 PM');
-  const attendeeEmails = friends.filter(friend => {
-    if (friend.isInvited) return friend;
-    }).map(attendee => {return {email: attendee.freeTimeEmail}});
+  const attendeeEmails = friends
+    .filter((friend) => {
+      if (friend.isInvited) return friend;
+    })
+    .map((attendee) => {
+      return { email: attendee.freeTimeEmail };
+    });
   //  console.log("INVITED ATTENDEES", attendeeEmails)
 
   useEffect(() => {
     setSelectedEnd(selectedStart);
-  }, [selectedStart])
+  }, [selectedStart]);
 
   const startElements = allIntervals.map((interval) => (
     <option key={nanoid()} value={interval}>
@@ -120,12 +125,13 @@ const NewEventModal = ({
     };
 
     // console.log(body);
-    axios.post(`/api/addEvent?email=${userEmail}`, body)
-      .then(res => {
+    axios
+      .post(`/api/addEvent?email=${userEmail}`, body)
+      .then((res) => {
         findMutualTime(userEmail, freeTimeEmail);
         return onEventClose();
       })
-      .catch(err => err)
+      .catch((err) => err);
   };
 
   return (
