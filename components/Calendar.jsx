@@ -88,17 +88,19 @@ const Calendar = ({
             // get picture urls for organizer and attendees
             const freeEmails = arg.event._def.extendedProps.attendees;
             const attendees = [];
-            freeEmails.forEach(async (att) => {
-              console.log('ATTENDEE ---------->', att.email);
-              const qAtt = query(
-                collection(db, 'user_cal_data'),
-                where('freeTimeEmail', '==', att.email)
-              );
-              const qAttSnap = await getDocs(qAtt);
-              qAttSnap.forEach((doc) => {
-                attendees.push(doc.data());
+            if (freeEmails) {
+              freeEmails.forEach(async (att) => {
+                console.log('ATTENDEE ---------->', att.email);
+                const qAtt = query(
+                  collection(db, 'user_cal_data'),
+                  where('freeTimeEmail', '==', att.email)
+                );
+                const qAttSnap = await getDocs(qAtt);
+                qAttSnap.forEach((doc) => {
+                  attendees.push(doc.data());
+                });
               });
-            });
+            }
             console.log('ATTENDEEEEES ARRAY: ', attendees);
             const hostReq = doc(
               db,
