@@ -203,7 +203,11 @@ const NewEventModal = ({
             <Button variant="outline" colorScheme="red" onClick={onEventClose}>
               Cancel
             </Button>
-            <Button colorScheme="teal" onClick={handleSubmit}>
+            <Button
+              colorScheme="teal"
+              onClick={handleSubmit}
+              isDisabled={attendeeEmails.length === 0}
+            >
               Submit
             </Button>
           </Flex>
