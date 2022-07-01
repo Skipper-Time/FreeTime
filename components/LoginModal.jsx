@@ -79,6 +79,9 @@ const LoginModal = ({ isLoginOpen, onLoginClose }) => {
     <Modal isOpen={isLoginOpen} onClose={onLoginClose}>
       <ModalOverlay />
       <ModalContent bg="#D9D9D9" borderRadius="16px" p="3rem 1rem">
+      <ModalHeader>
+          <Center fontSize="3xl"> Log in </Center>
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody justifyContent="center">
           <Flex flexDir="column" alignContent="center">
