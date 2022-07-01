@@ -24,6 +24,8 @@ const Calendar = ({
   onDetailsOpen,
   eventInfo,
   setEventInfo,
+  eventDetails,
+  setEventDetails,
   bookedFreeTime,
 }) => {
   console.log('booked free time', bookedFreeTime);
@@ -41,26 +43,28 @@ const Calendar = ({
       title: '~FREE~ 🫡',
       backgroundColor: '#8E9EEB',
       color: 'black',
-    }))
+    }));
 
     const bookedTime = mergeFreeEvents(bookedFreeTime).map((event) => ({
       ...event,
       start: event.start.dateTime,
       end: event.end.dateTime,
-      title: '~BOOKED ON FREETIME~ 🫡',
+      title: event.summary,
       backgroundColor: 'Orange',
       color: 'black',
-     }))
+    }));
     // console.log('BOOOOOOOOOKED TIME:', bookedTime);
 
-
-    const finalDisplay = [...freeTimeDisplay, ...bookedTime]
-    console.log('FINALDISPLAY', finalDisplay)
+    const finalDisplay = [...freeTimeDisplay, ...bookedTime];
+    console.log('FINALDISPLAY', finalDisplay);
     return finalDisplay;
-  }
+  };
 
-  console.log('bookedFreeTime', bookedFreeTime)
-  console.log('mergeFreeEvents(bookedFreeTime)', mergeFreeEvents(bookedFreeTime))
+  console.log('bookedFreeTime', bookedFreeTime);
+  console.log(
+    'mergeFreeEvents(bookedFreeTime)',
+    mergeFreeEvents(bookedFreeTime)
+  );
   return (
     <>
       <FullCalendar
@@ -88,38 +92,51 @@ const Calendar = ({
             const attendees = [];
             freeEmails.forEach(async (att) => {
               console.log('ATTENDEE ---------->', att.email);
-              const qAtt = query(collection(db, "user_cal_data"),
-              where("freeTimeEmail", "==", att.email));
+              const qAtt = query(
+                collection(db, 'user_cal_data'),
+                where('freeTimeEmail', '==', att.email)
+              );
               const qAttSnap = await getDocs(qAtt);
               qAttSnap.forEach((doc) => {
                 attendees.push(doc.data());
-              })
-            })
+              });
+            });
             console.log('ATTENDEEEEES ARRAY: ', attendees);
+            const hostReq = doc(
+              db,
+              'user_cal_data',
+              arg.event._def.extendedProps.creator.email
+            );
+            const hostSnap = await getDoc(hostReq);
+            const hostData = hostSnap.data();
+            console.log('hostdata', hostData);
 
-            const host = {};
-            setEventInfo({
+            const host = {
+              displayName: hostData.displayName,
+              profilePic: hostData.profilePic,
+            };
+            // const host = {
+            //   displayName: arg.event._def.extendedProps.c,
+            //   profilePic:
+            // };
+            setEventDetails({
               title: arg.event._def.extendedProps.summary,
               start: arg.event.start,
               end: arg.event.end,
               description: arg.event._def.extendedProps.description,
               attendees,
               host,
-              location: arg.event._def.extendedProps.location
+              location: arg.event._def.extendedProps.location,
             });
             setTimeout(onDetailsOpen, 400);
           }
           // alert(arg.event.title);
           // alert(arg.event.start);
         }}
-        events={
-          combineEvents()
-
-          }
+        events={combineEvents()}
       />
     </>
   );
 };
 
 export default Calendar;
-
