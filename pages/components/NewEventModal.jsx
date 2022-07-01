@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -24,15 +24,15 @@ import InvitedFriends from './InvitedFriends';
 import axios from 'axios';
 
 const allIntervals = [];
-allIntervals.push(`12:00 AM`);
-allIntervals.push(`12:30 AM`);
-for (let i = 1; i <= 11; i++) {
+// allIntervals.push(`12:00 AM`);
+// allIntervals.push(`12:30 AM`);
+for (let i = 8; i <= 11; i++) {
   allIntervals.push(`${i}:00 AM`);
   allIntervals.push(`${i}:30 AM`);
 }
 allIntervals.push(`12:00 PM`);
 allIntervals.push(`12:30 PM`);
-for (let i = 1; i <= 11; i++) {
+for (let i = 1; i <= 10; i++) {
   allIntervals.push(`${i}:00 PM`);
   allIntervals.push(`${i}:30 PM`);
 }
@@ -43,17 +43,23 @@ const NewEventModal = ({
   events,
   eventInfo,
   friends,
+  findMutualTime,
   userEmail,
+  freeTimeEmail,
 }) => {
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');
   const [location, setSelectedLocation] = useState('');
-  const [selectedStart, setSelectedStart] = useState('12:00 PM');
-  const [selectedEnd, setSelectedEnd] = useState('12:00 PM');
+  const [selectedStart, setSelectedStart] = useState('3:00 PM');
+  const [selectedEnd, setSelectedEnd] = useState('3:00 PM');
   const attendeeEmails = friends.filter(friend => {
     if (friend.isInvited) return friend;
-  }).map(attendee => {return {email: attendee.fullEmail}});
-   console.log("INVITED ATTENDEES", attendeeEmails)
+    }).map(attendee => {return {email: attendee.freeTimeEmail}});
+  //  console.log("INVITED ATTENDEES", attendeeEmails)
+
+  useEffect(() => {
+    setSelectedEnd(selectedStart);
+  }, [selectedStart])
 
   const startElements = allIntervals.map((interval) => (
     <option key={nanoid()} value={interval}>
@@ -116,6 +122,7 @@ const NewEventModal = ({
     // console.log(body);
     axios.post(`/api/addEvent?email=${userEmail}`, body)
       .then(res => {
+        findMutualTime(userEmail, freeTimeEmail);
         return onEventClose();
       })
       .catch(err => err)
