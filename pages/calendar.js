@@ -116,9 +116,7 @@ export default function Home() {
               axios.get(`api/freeBusy?email=${user.email}`),
               getDocs(allUsersRef),
               axios.get(`api/freeTimeEvents?email=${user.email}`)
-            ].map(async (item) => {
-              return await item;
-            })
+            ]
           )
 
           const userFreeTime = freeBusyResponse.data.data.calendars[user.email].busy;
