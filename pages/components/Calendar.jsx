@@ -7,11 +7,21 @@ import NewEventModal from './NewEventModal';
 import { useState } from 'react';
 import getFreeTime from '../../methods/mergeDates';
 import mergeFreeEvents from '../../methods/mergeEvents';
+import { auth, db } from '/firebase/firebaseConfig';
+import {
+  collection,
+  where,
+  query,
+  getDoc,
+  getDocs,
+  doc,
+} from 'firebase/firestore';
 
 const Calendar = ({
   events,
   friends,
   onEventOpen,
+  onDetailsOpen,
   eventInfo,
   setEventInfo,
   bookedFreeTime,
@@ -39,7 +49,8 @@ const Calendar = ({
       title: '~BOOKED ON FREETIME~ 🫡',
       backgroundColor: 'Orange',
       color: 'black',
-    }))
+     }))
+    // console.log('BOOOOOOOOOKED TIME:', bookedTime);
 
 
     const finalDisplay = [...freeTimeDisplay, ...bookedTime]
@@ -59,13 +70,44 @@ const Calendar = ({
         slotMinTime="8:00:00"
         slotMaxTime="23:00:00"
         dateClick={handleDateClick}
-        eventClick={(arg) => {
-          setEventInfo({
-            title: arg.event.title,
-            start: arg.event.start,
-            end: arg.event.end,
-          });
-          onEventOpen();
+        eventClick={async (arg) => {
+          console.log('what does arg look like?: ', arg);
+          if (arg.event.title === '~FREE~ 🫡') {
+            setEventInfo({
+              title: arg.event.title,
+              start: arg.event.start,
+              end: arg.event.end,
+            });
+            onEventOpen();
+          } else {
+            // get attendees, host up here
+            // get picture urls for organizer and attendees
+            const freeEmails = arg.event._def.extendedProps.attendees;
+            // console.log('ATTENDEEEEES: ', freeEmails);
+            const attendees = [];
+            freeEmails.forEach(async (att) => {
+              console.log('ATTENDEE ---------->', att.email);
+              const qAtt = query(collection(db, "user_cal_data"),
+              where("freeTimeEmail", "==", att.email));
+              const qAttSnap = await getDocs(qAtt);
+              qAttSnap.forEach((doc) => {
+                attendees.push(doc.data());
+              })
+            })
+            console.log('ATTENDEEEEES ARRAY: ', attendees);
+
+            const host = {};
+            setEventInfo({
+              title: arg.event._def.extendedProps.summary,
+              start: arg.event.start,
+              end: arg.event.end,
+              description: arg.event._def.extendedProps.description,
+              attendees,
+              host,
+              location: arg.event._def.extendedProps.location
+            });
+            setTimeout(onDetailsOpen, 400);
+          }
           // alert(arg.event.title);
           // alert(arg.event.start);
         }}

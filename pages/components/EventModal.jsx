@@ -38,8 +38,8 @@ for (let i = 1; i <= 10; i++) {
 }
 
 const EventModal = ({
-  isEventOpen,
-  onEventClose,
+  isDetailsOpen,
+  onDetailsClose,
   events,
   eventInfo,
   friends,
@@ -123,7 +123,7 @@ const EventModal = ({
     axios.post(`/api/addEvent?email=${userEmail}`, body)
       .then(res => {
         findMutualTime(userEmail, freeTimeEmail);
-        return onEventClose();
+        return onDetailsClose();
       })
       .catch(err => err)
   };
@@ -132,7 +132,7 @@ const EventModal = ({
     // Need to render only for created events not for busy events.
     // The fact that this needs to happen scares and confuses me...
     // But it is okay :).
-    <Modal isOpen={isEventOpen} onClose={onEventClose}>
+    <Modal isOpen={isDetailsOpen} onClose={onDetailsClose}>
       {console.log('INFO', eventInfo)}
       {console.log('EVENT', events)}
       <ModalOverlay />
@@ -140,7 +140,7 @@ const EventModal = ({
         <ModalHeader mb="-1rem">
           <Center fontSize="xl" mb="1rem">
             {' '}
-            Event Info{' '}
+            Event Details{' '}
           </Center>
           <InvitedFriends friends={friends} />
         </ModalHeader>
@@ -196,7 +196,7 @@ const EventModal = ({
         </ModalBody>
         <ModalFooter justifyContent="center">
           <Flex flexDir="row" alignContent="center" gap="1rem">
-            <Button variant="outline" colorScheme="red" onClick={onEventClose}>
+            <Button variant="outline" colorScheme="red" onClick={onDetailsClose}>
               Cancel
             </Button>
             <Button colorScheme="teal" onClick={handleSubmit}>
