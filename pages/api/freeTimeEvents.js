@@ -51,6 +51,6 @@ export default async function handler(req, res) {
     calendarId: freeTimeEmail,
   });
 
-  console.log('DOES THIS WORK', result.data.items)
+  // console.log('DOES THIS WORK', result.data.items)
   res.status(200).json(result.data.items);
 }

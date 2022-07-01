@@ -29,7 +29,7 @@ import {
 } from 'firebase/firestore';
 import InvitedFriends from './components/InvitedFriends';
 import NewEventModal from './components/NewEventModal';
-import queryDbForFreeTimeEmail from '../methods/queryDbForFreeTimeEmail'
+import queryDbForFreeTimeEmail from '../methods/queryDbForFreeTimeEmail';
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,7 +64,7 @@ export default function Home() {
         });
       })
       .then((response) => {
-        return axios.get(`api/freeTimeEvents?email=${freeEmail}`)
+        return axios.get(`api/freeTimeEvents?email=${email}`)
       })
       .then((response) => {
         console.log('RESPONSE', response.data)
@@ -74,8 +74,8 @@ export default function Home() {
             ...prevEvents,
             ...newResult.map((event) => ({
               ...event,
-              title: '~FREE~ 🫡',
-              backgroundColor: '#723D46',
+              title: '~BOOKED ON FREETIME~ 🫡',
+              backgroundColor: 'red',
               color: 'black',
             })),
           ];
@@ -147,6 +147,7 @@ export default function Home() {
                     return {
                       name: friendData.displayName,
                       email: email.split('@')[0],
+                      profilePic: friendData.profilePic,
                       fullEmail: email,
                       location: friendData.location,
                       freeTimeEmail: friendData.freeTimeEmail,
@@ -168,13 +169,32 @@ export default function Home() {
                   everyUser.push({
                     email: doc.id,
                     name: data.displayName || doc.id,
+                    profilePic: data.profilePic
                   });
                 }
                 setAllUsers(everyUser);
                 // console.log('userDoc', doc.data())
               });
-              console.log('allUSERS', everyUser);
+              // console.log('allUSERS', everyUser);
               // console.log('USERDOC', userDocs.docs)
+            })
+            .then((response) => {
+              return axios.get(`api/freeTimeEvents?email=${user.email}`)
+            })
+            .then((response) => {
+              console.log('RESPONSE', response.data)
+              const newResult = response.data
+              setBookedFreeTime((prevEvents) => {
+                return [
+                  ...prevEvents,
+                  ...newResult.map((event) => ({
+                    ...event,
+                    title: '~BOOKED ON FREETIME~ 🫡',
+                    backgroundColor: 'red',
+                    color: 'black',
+                  })),
+                ];
+              })
             })
             .catch((error) => {
               console.log('could not access events for calendar', error);
@@ -224,7 +244,11 @@ export default function Home() {
           </Link>
         </Box>
       </Flex>
-      <Flex justify="center" bg="#6D7D5D">
+      <Flex
+        justify="center"
+        bg="#6D7D5D"
+        paddingBottom="500px"
+      >
         <Box
           p="3rem 3rem 3rem 3rem"
           bg="white"
@@ -251,6 +275,7 @@ export default function Home() {
                 onEventOpen={onEventOpen}
                 eventInfo={eventInfo}
                 setEventInfo={setEventInfo}
+                bookedFreeTime={bookedFreeTime}
               />
             )}
           </Box>
