@@ -16,7 +16,7 @@ import { useRef, useEffect, useState } from 'react';
 import Calendar from './components/Calendar';
 import Notifications from './components/Notifications';
 import Link from 'next/link';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import axios from 'axios';
 import { auth, db } from '../firebase/firebaseConfig';
 import {
@@ -30,8 +30,10 @@ import {
 import InvitedFriends from './components/InvitedFriends';
 import NewEventModal from './components/NewEventModal';
 import queryDbForFreeTimeEmail from '../methods/queryDbForFreeTimeEmail';
+import { useRouter } from 'next/router'
 
 export default function Home() {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [events, setEvents] = useState([]);
   const btnRef = useRef();
@@ -41,6 +43,17 @@ export default function Home() {
   const [userEmail, setUserEmail] = useState('');
   const [bookedFreeTime, setBookedFreeTime] = useState([]);
   const [freeTimeEmail, setFreeTimeEmail] = useState('');
+
+  const logout = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      router.push('/');
+      console.log('signout successful');
+    }).catch((error) => {
+      console.log(error);
+      router.push('/');
+    });
+  }
 
   const findMutualTime = (email, freeTime) => {
     axios
@@ -91,118 +104,113 @@ export default function Home() {
     onOpen: onEventOpen,
     onClose: onEventClose,
   } = useDisclosure();
-
   useEffect(() => {
-    const loadInitialEvents = async () => {
-      const auth = await getAuth();
-      while (auth === null) {
-        auth = await getAuth();
+    const loadInitialEvents = async (user) => {
+      const getFreeEmail = async () => {
+        const newFreeTimeEmail = await queryDbForFreeTimeEmail(user.email)
+        setFreeTimeEmail(newFreeTimeEmail);
       }
-      const user = auth.currentUser;
-      if (user !== null) {
+      getFreeEmail();
+      if (freeTimeEmail.length !== 0) {
+        axios
+          .get(`api/freeBusy?email=${user.email}`)
+          .then((response) => {
+            const result = response.data.data.calendars[user.email].busy;
+            const freeTimeResult = response.data.data.calendars[freeTimeEmail].busy
+            const newResult = [...result, ...freeTimeResult];
+            setUserEmail(user.email);
 
-        const getFreeEmail = async () => {
-          const newFreeTimeEmail = await queryDbForFreeTimeEmail(user.email)
-          setFreeTimeEmail(newFreeTimeEmail);
-        }
-        getFreeEmail();
+            setEvents(
+              newResult.map((event) => ({
+                ...event,
+                title: '~FREE~ 🫡',
+                backgroundColor: '#723D46',
+                color: 'black',
+              }))
+            );
 
-        if (freeTimeEmail.length !== 0) {
+            const docRef = doc(db, 'user_cal_data', user.email)
 
-          axios
-            .get(`api/freeBusy?email=${user.email}`)
-            .then((response) => {
+            return getDoc(docRef);
+          })
+          .then(async (data) => {
+            const userData = data.data();
+            const currFriends = userData.friends;
+            setFriends(
+              await Promise.all(
+                currFriends.map(async (email) => {
+                  const docRef = doc(db, 'user_cal_data', email);
+                  const friendQuery = await getDoc(docRef);
+                  const friendData = friendQuery.data();
 
-              const result = response.data.data.calendars[user.email].busy;
-              const freeTimeResult = response.data.data.calendars[freeTimeEmail].busy
-              const newResult = [...result, ...freeTimeResult];
-              // const newResult = [...result];
-              setUserEmail(user.email);
+                 //  console.log('friendData', friendData);
 
-              setEvents(
-                newResult.map((event) => ({
-                  ...event,
-                  title: '~FREE~ 🫡',
-                  backgroundColor: '#723D46',
-                  color: 'black',
-                }))
-              );
-
-              const docRef = doc(db, 'user_cal_data', user.email)
-
-              return getDoc(docRef);
-            })
-            .then(async (data) => {
-              const userData = data.data();
-              const currFriends = userData.friends;
-              setFriends(
-                await Promise.all(
-                  currFriends.map(async (email) => {
-                    const docRef = doc(db, 'user_cal_data', email);
-                    const friendQuery = await getDoc(docRef);
-                    const friendData = friendQuery.data();
-
-                    console.log('friendData', friendData);
-
-                    return {
-                      name: friendData.displayName,
-                      email: email.split('@')[0],
-                      profilePic: friendData.profilePic,
-                      fullEmail: email,
-                      location: friendData.location,
-                      freeTimeEmail: friendData.freeTimeEmail,
-                      isInvited: false,
-                    };
-                  })
-                )
-              );
-            })
-            .then(() => {
-              const docRef = collection(db, 'user_cal_data');
-              return getDocs(docRef);
-            })
-            .then((userDocs) => {
-              const everyUser = [];
-              userDocs.forEach((doc) => {
-                if (user.email !== doc.id) {
-                  const data = doc.data();
-                  everyUser.push({
-                    email: doc.id,
-                    name: data.displayName || doc.id,
-                    profilePic: data.profilePic
-                  });
-                }
-                setAllUsers(everyUser);
-                // console.log('userDoc', doc.data())
-              });
-              // console.log('allUSERS', everyUser);
-              // console.log('USERDOC', userDocs.docs)
-            })
-            .then((response) => {
-              return axios.get(`api/freeTimeEvents?email=${user.email}`)
-            })
-            .then((response) => {
-              console.log('RESPONSE', response.data)
-              const newResult = response.data
-              setBookedFreeTime((prevEvents) => {
-                return [
-                  ...prevEvents,
-                  ...newResult.map((event) => ({
-                    ...event,
-                    title: '~BOOKED ON FREETIME~ 🫡',
-                    backgroundColor: 'red',
-                    color: 'black',
-                  })),
-                ];
-              })
-            })
-            .catch((error) => {
-              console.log('could not access events for calendar', error);
+                  return {
+                    name: friendData.displayName,
+                    email: email.split('@')[0],
+                    profilePic: friendData.profilePic,
+                    fullEmail: email,
+                    location: friendData.location,
+                    freeTimeEmail: friendData.freeTimeEmail,
+                    isInvited: false,
+                  };
+                })
+              )
+            );
+          })
+          .then(() => {
+            const docRef = collection(db, 'user_cal_data');
+            return getDocs(docRef);
+          })
+          .then((userDocs) => {
+            const everyUser = [];
+            userDocs.forEach((doc) => {
+              if (user.email !== doc.id) {
+                const data = doc.data();
+                everyUser.push({
+                  email: doc.id,
+                  name: data.displayName || doc.id,
+                  profilePic: data.profilePic
+                });
+              }
+              setAllUsers(everyUser);
+              // console.log('userDoc', doc.data())
             });
+            // console.log('allUSERS', everyUser);
+            // console.log('USERDOC', userDocs.docs)
+          })
+          .then((response) => {
+            return axios.get(`api/freeTimeEvents?email=${user.email}`)
+          })
+          .then((response) => {
+           //  console.log('RESPONSE', response.data)
+            const newResult = response.data
+            setBookedFreeTime((prevEvents) => {
+              return [
+                ...prevEvents,
+                ...newResult.map((event) => ({
+                  ...event,
+                  title: '~BOOKED ON FREETIME~ 🫡',
+                  backgroundColor: 'red',
+                  color: 'black',
+                })),
+              ];
+            })
+          })
+          .catch((error) => {
+            console.log('could not access events for calendar', error);
+          });
         }
       }
-    };
-    loadInitialEvents();
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loadInitialEvents(user);
+      } else {
+        router.push('/');
+      }
+    });
   }, [freeTimeEmail] );
 
   return (
@@ -239,9 +247,7 @@ export default function Home() {
         </Text>
         <Box>
           <Notifications />
-          <Link href="/">
-            <Button colorScheme="whiteAlpha">Log out</Button>
-          </Link>
+          <Button colorScheme="whiteAlpha" onClick={logout}>Log out</Button>
         </Box>
       </Flex>
       <Flex
