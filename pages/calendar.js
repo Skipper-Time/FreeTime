@@ -9,12 +9,12 @@ import {
   Center,
   useDisclosure,
 } from '@chakra-ui/react';
-import LoginModal from './components/LoginModal';
-import SignUpModal from './components/SignUpModal';
-import FriendsDrawer from './components/FriendsDrawer';
+import LoginModal from '../components/LoginModal';
+import SignUpModal from '../components/SignUpModal';
+import FriendsDrawer from '../components/FriendsDrawer';
 import { useRef, useEffect, useState } from 'react';
-import Calendar from './components/Calendar';
-import Notifications from './components/Notifications';
+import Calendar from '../components/Calendar';
+import Notifications from '../components/Notifications';
 import Link from 'next/link';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import axios from 'axios';
@@ -27,8 +27,8 @@ import {
   getDocs,
   doc,
 } from 'firebase/firestore';
-import InvitedFriends from './components/InvitedFriends';
-import NewEventModal from './components/NewEventModal';
+import InvitedFriends from '../components/InvitedFriends';
+import NewEventModal from '../components/NewEventModal';
 import queryDbForFreeTimeEmail from '../methods/queryDbForFreeTimeEmail';
 import { useRouter } from 'next/router'
 
@@ -104,112 +104,104 @@ export default function Home() {
   } = useDisclosure();
   useEffect(() => {
     const loadInitialEvents = async (user) => {
-      const getFreeEmail = async () => {
+      try {
         const newFreeTimeEmail = await queryDbForFreeTimeEmail(user.email)
-        setFreeTimeEmail(newFreeTimeEmail);
-      }
-      getFreeEmail();
-      if (freeTimeEmail.length !== 0) {
-        axios
-          .get(`api/freeBusy?email=${user.email}`)
-          .then((response) => {
-            const result = response.data.data.calendars[user.email].busy;
-            const freeTimeResult = response.data.data.calendars[freeTimeEmail].busy
-            const newResult = [...result, ...freeTimeResult];
-            setUserEmail(user.email);
 
-            setEvents(
-              newResult.map((event) => ({
-                ...event,
-                title: '~FREE~ 🫡',
-                backgroundColor: '#723D46',
-                color: 'black',
-              }))
-            );
-
-            const docRef = doc(db, 'user_cal_data', user.email)
-
-            return getDoc(docRef);
-          })
-          .then(async (data) => {
-            const userData = data.data();
-            const currFriends = userData.friends;
-            setFriends(
-              await Promise.all(
-                currFriends.map(async (email) => {
-                  const docRef = doc(db, 'user_cal_data', email);
-                  const friendQuery = await getDoc(docRef);
-                  const friendData = friendQuery.data();
-
-                 //  console.log('friendData', friendData);
-
-                  return {
-                    name: friendData.displayName,
-                    email: email.split('@')[0],
-                    profilePic: friendData.profilePic,
-                    fullEmail: email,
-                    location: friendData.location,
-                    freeTimeEmail: friendData.freeTimeEmail,
-                    isInvited: false,
-                  };
-                })
-              )
-            );
-          })
-          .then(() => {
-            const docRef = collection(db, 'user_cal_data');
-            return getDocs(docRef);
-          })
-          .then((userDocs) => {
-            const everyUser = [];
-            userDocs.forEach((doc) => {
-              if (user.email !== doc.id) {
-                const data = doc.data();
-                everyUser.push({
-                  email: doc.id,
-                  name: data.displayName || doc.id,
-                  profilePic: data.profilePic
-                });
-              }
-              setAllUsers(everyUser);
-              // console.log('userDoc', doc.data())
-            });
-            // console.log('allUSERS', everyUser);
-            // console.log('USERDOC', userDocs.docs)
-          })
-          .then((response) => {
-            return axios.get(`api/freeTimeEvents?email=${user.email}`)
-          })
-          .then((response) => {
-           //  console.log('RESPONSE', response.data)
-            const newResult = response.data
-            setBookedFreeTime((prevEvents) => {
-              return [
-                ...prevEvents,
-                ...newResult.map((event) => ({
-                  ...event,
-                  title: '~BOOKED ON FREETIME~ 🫡',
-                  backgroundColor: 'red',
-                  color: 'black',
-                })),
-              ];
+        if (newFreeTimeEmail.length !== 0) {
+          const userDocRef = doc(db, 'user_cal_data', user.email)
+          const allUsersRef = collection(db, 'user_cal_data');
+          const [ userDocResponse, freeBusyResponse, allUsersDocs, freeTimeEventsRes ] = await Promise.all(
+            [
+              getDoc(userDocRef),
+              axios.get(`api/freeBusy?email=${user.email}`),
+              getDocs(allUsersRef),
+              axios.get(`api/freeTimeEvents?email=${user.email}`)
+            ].map(async (item) => {
+              return await item;
             })
-          })
-          .catch((error) => {
-            console.log('could not access events for calendar', error);
+          )
+
+          const userFreeTime = freeBusyResponse.data.data.calendars[user.email].busy;
+          const freeBusyFreeTime = freeBusyResponse.data.data.calendars[newFreeTimeEmail].busy;
+          const combinedFreeTime = [...userFreeTime, ...freeBusyFreeTime];
+
+          const userData = userDocResponse.data();
+          const currFriends = userData.friends;
+
+          const friends = await Promise.all(
+            currFriends.map(async (email) => {
+              const docRef = doc(db, 'user_cal_data', email);
+              return await getDoc(docRef);
+            })
+          );
+
+          const friendsData = friends.map((friend, i) => {
+              const email = currFriends[i];
+              const data = friend.data();
+              return {
+                name: data.displayName,
+                email: email.split('@')[0],
+                profilePic: data.profilePic,
+                fullEmail: email,
+                location: data.location,
+                freeTimeEmail: data.freeTimeEmail,
+                isInvited: false,
+              };
           });
+
+          const allUsers = [];
+          allUsersDocs.forEach((doc) => {
+            if (user.email !== doc.id) {
+              const data = doc.data();
+              allUsers.push({
+                email: doc.id,
+                name: data.displayName || doc.id,
+                profilePic: data.profilePic
+              });
+            }
+          });
+
+          const freeTimeEventsData = freeTimeEventsRes.data
+
+          const events = combinedFreeTime.map((event) => ({
+              ...event,
+              title: '~FREE~ 🫡',
+              backgroundColor: '#723D46',
+              color: 'black',
+          }));
+
+          setEvents(events);
+          setBookedFreeTime((prevEvents) => {
+            return [
+              ...prevEvents,
+              ...freeTimeEventsData.map((event) => ({
+                ...event,
+                title: '~BOOKED ON FREETIME~ 🫡',
+                backgroundColor: 'red',
+                color: 'black',
+              })),
+            ];
+          })
+          setUserEmail(user.email);
+          setFreeTimeEmail(newFreeTimeEmail);
+          setFriends(friendsData);
+          setAllUsers(allUsers);
         }
+      } catch (error) {
+        console.log(error);
       }
+    }
 
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log('Authenticated');
         loadInitialEvents(user);
       } else {
         router.push('/');
       }
     });
-  }, [freeTimeEmail] );
+  }, [freeTimeEmail, router] );
 
   return (
     <>

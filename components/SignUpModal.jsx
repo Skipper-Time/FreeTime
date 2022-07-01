@@ -23,7 +23,7 @@ import { useState } from 'react';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { getAuth, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
 import axios from 'axios';
-import {provider, auth, db} from '../../firebase/firebaseConfig.js';
+import {provider, auth, db} from '../firebase/firebaseConfig.js';
 import { doc, setDoc, collection } from 'firebase/firestore';
 
 

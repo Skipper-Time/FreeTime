@@ -14,7 +14,6 @@ const UserCard = ({
       console.log('hello world')
     }
   };
-  console.log('profile pic', profilePic)
   return (
     <Flex
       borderWidth="1px"
