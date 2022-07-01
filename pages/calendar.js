@@ -31,7 +31,7 @@ import InvitedFriends from '../components/InvitedFriends';
 import NewEventModal from '../components/NewEventModal';
 import EventModal from '../components/EventModal';
 import queryDbForFreeTimeEmail from '../methods/queryDbForFreeTimeEmail';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const router = useRouter();
@@ -41,27 +41,41 @@ export default function Home() {
   const [friends, setFriends] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [eventInfo, setEventInfo] = useState({});
+  const [eventDetails, setEventDetails] = useState({
+    title: '',
+    start: null,
+    end: null,
+    description: '',
+    attendees: [],
+    host: {
+      displayName: '',
+      profilePic: '',
+    },
+    location: '',
+  });
   const [userEmail, setUserEmail] = useState('');
   const [bookedFreeTime, setBookedFreeTime] = useState([]);
   const [freeTimeEmail, setFreeTimeEmail] = useState('');
 
   const logout = () => {
     const auth = getAuth();
-    signOut(auth).then(() => {
-      console.log('signout successful');
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
+    signOut(auth)
+      .then(() => {
+        console.log('signout successful');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const findMutualTime = (email, freeTime) => {
     axios
       .get(`api/freeBusy?email=${email}`)
       .then((response) => {
-        console.log('WHAT DOES THIS GIVE ME?', response)
-        console.log('IS THIS MY FREETIME EMAIL?', freeTime)
+        console.log('WHAT DOES THIS GIVE ME?', response);
+        console.log('IS THIS MY FREETIME EMAIL?', freeTime);
         const result = response.data.data.calendars[email].busy;
-        const freeTimeResult = response.data.data.calendars[freeTime].busy
+        const freeTimeResult = response.data.data.calendars[freeTime].busy;
         const newResult = [...result, ...freeTimeResult];
         setEvents((prevEvents) => {
           return [
@@ -76,11 +90,11 @@ export default function Home() {
         });
       })
       .then((response) => {
-        return axios.get(`api/freeTimeEvents?email=${email}`)
+        return axios.get(`api/freeTimeEvents?email=${email}`);
       })
       .then((response) => {
-        console.log('RESPONSE', response.data)
-        const newResult = response.data
+        console.log('RESPONSE', response.data);
+        const newResult = response.data;
         setBookedFreeTime((prevEvents) => {
           return [
             ...prevEvents,
@@ -91,7 +105,7 @@ export default function Home() {
               color: 'black',
             })),
           ];
-        })
+        });
       })
       .catch((error) => {
         console.log('could not access events for calendar', error);
@@ -113,24 +127,31 @@ export default function Home() {
   useEffect(() => {
     const loadInitialEvents = async (user) => {
       try {
-        const newFreeTimeEmail = await queryDbForFreeTimeEmail(user.email)
+        const newFreeTimeEmail = await queryDbForFreeTimeEmail(user.email);
 
         if (newFreeTimeEmail.length !== 0) {
-          const userDocRef = doc(db, 'user_cal_data', user.email)
+          const userDocRef = doc(db, 'user_cal_data', user.email);
           const allUsersRef = collection(db, 'user_cal_data');
-          const [ userDocResponse, freeBusyResponse, allUsersDocs, freeTimeEventsRes ] = await Promise.all(
+          const [
+            userDocResponse,
+            freeBusyResponse,
+            allUsersDocs,
+            freeTimeEventsRes,
+          ] = await Promise.all(
             [
               getDoc(userDocRef),
               axios.get(`api/freeBusy?email=${user.email}`),
               getDocs(allUsersRef),
-              axios.get(`api/freeTimeEvents?email=${user.email}`)
+              axios.get(`api/freeTimeEvents?email=${user.email}`),
             ].map(async (item) => {
               return await item;
             })
-          )
+          );
 
-          const userFreeTime = freeBusyResponse.data.data.calendars[user.email].busy;
-          const freeBusyFreeTime = freeBusyResponse.data.data.calendars[newFreeTimeEmail].busy;
+          const userFreeTime =
+            freeBusyResponse.data.data.calendars[user.email].busy;
+          const freeBusyFreeTime =
+            freeBusyResponse.data.data.calendars[newFreeTimeEmail].busy;
           const combinedFreeTime = [...userFreeTime, ...freeBusyFreeTime];
 
           const userData = userDocResponse.data();
@@ -144,17 +165,17 @@ export default function Home() {
           );
 
           const friendsData = friends.map((friend, i) => {
-              const email = currFriends[i];
-              const data = friend.data();
-              return {
-                name: data.displayName,
-                email: email.split('@')[0],
-                profilePic: data.profilePic,
-                fullEmail: email,
-                location: data.location,
-                freeTimeEmail: data.freeTimeEmail,
-                isInvited: false,
-              };
+            const email = currFriends[i];
+            const data = friend.data();
+            return {
+              name: data.displayName,
+              email: email.split('@')[0],
+              profilePic: data.profilePic,
+              fullEmail: email,
+              location: data.location,
+              freeTimeEmail: data.freeTimeEmail,
+              isInvited: false,
+            };
           });
 
           const allUsers = [];
@@ -164,18 +185,18 @@ export default function Home() {
               allUsers.push({
                 email: doc.id,
                 name: data.displayName || doc.id,
-                profilePic: data.profilePic
+                profilePic: data.profilePic,
               });
             }
           });
 
-          const freeTimeEventsData = freeTimeEventsRes.data
+          const freeTimeEventsData = freeTimeEventsRes.data;
 
           const events = combinedFreeTime.map((event) => ({
-              ...event,
-              title: '~FREE~ 🫡',
-              backgroundColor: '#723D46',
-              color: 'black',
+            ...event,
+            title: '~FREE~ 🫡',
+            backgroundColor: '#723D46',
+            color: 'black',
           }));
 
           setEvents(events);
@@ -189,7 +210,7 @@ export default function Home() {
                 color: 'black',
               })),
             ];
-          })
+          });
           setUserEmail(user.email);
           setFreeTimeEmail(newFreeTimeEmail);
           setFriends(friendsData);
@@ -198,7 +219,7 @@ export default function Home() {
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -209,7 +230,7 @@ export default function Home() {
         router.push('/');
       }
     });
-  }, [freeTimeEmail, router] );
+  }, [freeTimeEmail, router]);
 
   return (
     <>
@@ -227,7 +248,7 @@ export default function Home() {
         events={events}
         isDetailsOpen={isDetailsOpen}
         onDetailsClose={onDetailsClose}
-        eventInfo={eventInfo}
+        eventDetails={eventDetails}
         friends={friends}
         userEmail={userEmail}
         findMutualTime={findMutualTime}
@@ -255,14 +276,12 @@ export default function Home() {
         </Text>
         <Box>
           <Notifications />
-          <Button colorScheme="whiteAlpha" onClick={logout}>Log out</Button>
+          <Button colorScheme="whiteAlpha" onClick={logout}>
+            Log out
+          </Button>
         </Box>
       </Flex>
-      <Flex
-        justify="center"
-        bg="#6D7D5D"
-        paddingBottom="500px"
-      >
+      <Flex justify="center" bg="#6D7D5D" paddingBottom="500px">
         <Box
           p="3rem 3rem 3rem 3rem"
           bg="white"
@@ -289,6 +308,8 @@ export default function Home() {
                 onEventOpen={onEventOpen}
                 eventInfo={eventInfo}
                 setEventInfo={setEventInfo}
+                eventDetails={eventDetails}
+                setEventDetails={setEventDetails}
                 bookedFreeTime={bookedFreeTime}
                 onDetailsOpen={onDetailsOpen}
               />
