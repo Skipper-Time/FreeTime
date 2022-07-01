@@ -48,11 +48,9 @@ export default function Home() {
   const logout = () => {
     const auth = getAuth();
     signOut(auth).then(() => {
-      router.push('/');
       console.log('signout successful');
     }).catch((error) => {
       console.log(error);
-      router.push('/');
     });
   }
 
