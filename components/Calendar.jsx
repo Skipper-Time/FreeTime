@@ -5,8 +5,8 @@ import { useRef, useEffect } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import NewEventModal from './NewEventModal';
 import { useState } from 'react';
-import getFreeTime from '../../methods/mergeDates';
-import mergeFreeEvents from '../../methods/mergeEvents';
+import getFreeTime from '../methods/mergeDates';
+import mergeFreeEvents from '../methods/mergeEvents';
 import { auth, db } from '/firebase/firebaseConfig';
 import {
   collection,
@@ -26,6 +26,7 @@ const Calendar = ({
   setEventInfo,
   bookedFreeTime,
 }) => {
+  console.log('booked free time', bookedFreeTime);
   const [displayEvents, setDisplayEvents] = useState([]);
 
   const calendarRef = useRef(null);

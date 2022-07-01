@@ -34,5 +34,13 @@ export default async function handler (req, res) {
     resource: body,
   });
 
+  console.log(event);
+
+//  const userRef = db.collection('user_cal_data').doc(email);
+//
+//  const  = await userRef.update({
+//    regions: FieldValue.arrayUnion(event...)
+//  });
+
   res.status(201).send('successfully added freetime event');
 }
