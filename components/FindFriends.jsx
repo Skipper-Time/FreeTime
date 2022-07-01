@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import UserCard from './UserCard.jsx';
 import { Box, Input } from '@chakra-ui/react';
 
-const FindFriends = ({ allUsers }) => {
+const FindFriends = ({ allUsers, addNewFriend }) => {
 
   const [searchText, setSearchText] = useState('');
 
@@ -24,6 +24,7 @@ const FindFriends = ({ allUsers }) => {
         name={user.name}
         email={user.email}
         profilePic={user.profilePic}
+        addNewFriend={addNewFriend}
       />
     );
   });

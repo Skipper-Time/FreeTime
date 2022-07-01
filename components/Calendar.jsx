@@ -72,7 +72,6 @@ const Calendar = ({
         slotMaxTime="23:00:00"
         dateClick={handleDateClick}
         eventClick={async (arg) => {
-          console.log('what does arg look like?: ', arg);
           if (arg.event.title === '~FREE~ 🫡') {
             setEventInfo({
               title: arg.event.title,
@@ -84,10 +83,8 @@ const Calendar = ({
             // get attendees, host up here
             // get picture urls for organizer and attendees
             const freeEmails = arg.event._def.extendedProps.attendees;
-            // console.log('ATTENDEEEEES: ', freeEmails);
             const attendees = [];
             freeEmails.forEach(async (att) => {
-              console.log('ATTENDEE ---------->', att.email);
               const qAtt = query(collection(db, "user_cal_data"),
               where("freeTimeEmail", "==", att.email));
               const qAttSnap = await getDocs(qAtt);
@@ -95,7 +92,6 @@ const Calendar = ({
                 attendees.push(doc.data());
               })
             })
-            console.log('ATTENDEEEEES ARRAY: ', attendees);
 
             const host = {};
             setEventInfo({

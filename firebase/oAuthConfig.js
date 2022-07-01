@@ -15,9 +15,7 @@ oAuth2Client.on('tokens', async (tokens) => {
   if (tokens.refresh_token) {
     // store the refresh_token in database!
     await updateTokensInDb(tokens);
-    console.log(tokens.refresh_token);
   }
-  console.log(tokens.access_token);
 });
 
 module.exports = oAuth2Client;

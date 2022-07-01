@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Flex, Box, Image, Text } from '@chakra-ui/react';
-import { AddIcon, CheckIcon } from '@chakra-ui/icons';
+import { AddIcon, CheckIcon, MinusIcon } from '@chakra-ui/icons';
 
 const FriendCard = ({
   name,
@@ -11,6 +11,7 @@ const FriendCard = ({
   findMutualTime,
   setFriends,
   isInvited,
+  removeFriend
 }) => {
   const handleAdd = () => {
     if (!isInvited) {
@@ -25,7 +26,11 @@ const FriendCard = ({
       );
     }
   };
-  console.log('KJWEHKFWJELKFJ', profilePic)
+
+  const handleMinus = () => {
+    removeFriend(fullEmail, name, profilePic)
+  };
+
   return (
     <Flex
       borderWidth="1px"
@@ -51,16 +56,30 @@ const FriendCard = ({
         <Flex
           pos="absolute"
           top="10%"
-          right="6px"
+          right="30px"
           h="24px"
           w="24px"
           borderRadius="full"
           border="black 2px solid"
           alignContent="center"
-          _hover={{ cursor: 'pointer' }}
+          _hover={{ cursor: 'pointer', transform: 'scale(1.1)'}}
           onClick={handleAdd}
         >
           {isInvited ? <CheckIcon m="auto" /> : <AddIcon m="auto" />}
+        </Flex>
+        <Flex
+          pos="absolute"
+          top="10%"
+          right="2px"
+          h="24px"
+          w="24px"
+          borderRadius="full"
+          border="black 2px solid"
+          alignContent="center"
+          _hover={{ cursor: 'pointer', transform: 'scale(1.1)'}}
+          onClick={handleMinus}
+        >
+          <MinusIcon m="auto" />
         </Flex>
         <Text as="b" alignSelf="start">
           {name}

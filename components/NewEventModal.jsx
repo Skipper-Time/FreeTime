@@ -133,8 +133,6 @@ const NewEventModal = ({
     // The fact that this needs to happen scares and confuses me...
     // But it is okay :).
     <Modal isOpen={isEventOpen} onClose={onEventClose}>
-      {console.log('INFO', eventInfo)}
-      {console.log('EVENT', events)}
       <ModalOverlay />
       <ModalContent bg="white" borderRadius="16px" p="3rem 1rem">
         <ModalHeader mb="-1rem">

@@ -5,13 +5,15 @@ import { AddIcon, CheckIcon } from '@chakra-ui/icons';
 const UserCard = ({
   name,
   email,
-  profilePic
+  profilePic,
+  addNewFriend,
 }) => {
   const [isInvited, setIsInvited] = useState(false);
 
   const handleAdd = () => {
     if (!isInvited) {
-      console.log('hello world')
+      // add friend's email to current user's friend array
+      addNewFriend(email);
     }
   };
   return (
@@ -45,7 +47,7 @@ const UserCard = ({
           borderRadius="full"
           border="black 2px solid"
           alignContent="center"
-          _hover={{ cursor: 'pointer' }}
+          _hover={{ cursor: 'pointer', transform: 'scale(1.1)'}}
           onClick={handleAdd}
         >
           {isInvited ? <CheckIcon m="auto" /> : <AddIcon m="auto" />}

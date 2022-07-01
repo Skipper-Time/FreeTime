@@ -22,6 +22,8 @@ const FriendsDrawer = ({
   setFriends,
   findMutualTime,
   allUsers,
+  addNewFriend,
+  removeFriend
 }) => {
   const [currentView, setCurrentView] = useState('list');
   return (
@@ -50,11 +52,13 @@ const FriendsDrawer = ({
                     friends={friends}
                     setFriends={setFriends}
                     findMutualTime={findMutualTime}
+                    removeFriend={removeFriend}
                   />
                 </TabPanel>
                 <TabPanel>
                   <FindFriends
                   allUsers={allUsers}
+                  addNewFriend={addNewFriend}
                    />
                 </TabPanel>
               </TabPanels>

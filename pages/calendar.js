@@ -26,6 +26,9 @@ import {
   getDoc,
   getDocs,
   doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove
 } from 'firebase/firestore';
 import InvitedFriends from '../components/InvitedFriends';
 import NewEventModal from '../components/NewEventModal';
@@ -54,12 +57,44 @@ export default function Home() {
     });
   }
 
+  const addNewFriend = (newFriendEmail) => {
+    const userDoc = doc(db, 'user_cal_data', userEmail);
+    updateDoc(userDoc, {
+      friends: arrayUnion(newFriendEmail)
+    })
+    // console.log('ALL USERS LOOK LIKE THIS', allUsers)
+    const newUsers = allUsers.filter((each) => each.email !== newFriendEmail);
+    setAllUsers(newUsers);
+
+    const friendsRef = doc(db, 'user_cal_data', newFriendEmail);
+    getDoc(friendsRef)
+      .then(ref => {
+        const newFriend = ref.data();
+        setFriends(prev => [...prev, {
+          name: newFriend.displayName,
+          email: newFriendEmail.split('@')[0],
+          profilePic: newFriend.profilePic,
+          fullEmail: newFriendEmail,
+          location: newFriend.location,
+          freeTimeEmail: newFriend.freeTimeEmail,
+          isInvited: false,
+        }]);
+      })
+  };
+
+  const removeFriend = (oldFriendEmail, oldFriendName, oldFriendProfilePic) => {
+    const userDoc = doc(db, 'user_cal_data', userEmail);
+    updateDoc(userDoc, {
+      friends: arrayRemove(oldFriendEmail)
+    });
+    setFriends(prev => prev.filter(each => each.fullEmail !== oldFriendEmail));
+    setAllUsers(prev => [...prev, {name: oldFriendName, email: oldFriendEmail, profilePic: oldFriendProfilePic}])
+  };
+
   const findMutualTime = (email, freeTime) => {
     axios
       .get(`api/freeBusy?email=${email}`)
       .then((response) => {
-        console.log('WHAT DOES THIS GIVE ME?', response)
-        console.log('IS THIS MY FREETIME EMAIL?', freeTime)
         const result = response.data.data.calendars[email].busy;
         const freeTimeResult = response.data.data.calendars[freeTime].busy
         const newResult = [...result, ...freeTimeResult];
@@ -159,7 +194,7 @@ export default function Home() {
 
           const allUsers = [];
           allUsersDocs.forEach((doc) => {
-            if (user.email !== doc.id) {
+            if (user.email !== doc.id && !currFriends.includes(doc.id)) {
               const data = doc.data();
               allUsers.push({
                 email: doc.id,
@@ -211,6 +246,10 @@ export default function Home() {
     });
   }, [freeTimeEmail, router] );
 
+  // useEffect(() => {
+  //   console.log('FRIEND AND ALLUSERS CHANGE!!!')
+  // },[friends, allUsers])
+
   return (
     <>
       <NewEventModal
@@ -241,6 +280,8 @@ export default function Home() {
         setFriends={setFriends}
         findMutualTime={findMutualTime}
         allUsers={allUsers}
+        addNewFriend={addNewFriend}
+        removeFriend={removeFriend}
       />
       <Flex
         bg="#525E46"
