@@ -134,11 +134,6 @@ const EventModal = ({
     // The fact that this needs to happen scares and confuses me...
     // But it is okay :).
     <Modal isOpen={isDetailsOpen} onClose={onDetailsClose}>
-<<<<<<< HEAD
-=======
-      {console.log('INFO', eventDetails)}
-      {console.log('EVENT', events)}
->>>>>>> 77c296273d61ac9ad309fee48d46a9db727c8763
       <ModalOverlay />
       <ModalContent bg="white" borderRadius="16px" p="3rem 1rem">
         <ModalHeader mb="-1rem">

@@ -89,15 +89,6 @@ const Calendar = ({
             const freeEmails = arg.event._def.extendedProps.attendees;
             const attendees = [];
             freeEmails.forEach(async (att) => {
-<<<<<<< HEAD
-              const qAtt = query(collection(db, "user_cal_data"),
-              where("freeTimeEmail", "==", att.email));
-              const qAttSnap = await getDocs(qAtt);
-              qAttSnap.forEach((doc) => {
-                attendees.push(doc.data());
-              })
-            })
-=======
               console.log('ATTENDEE ---------->', att.email);
               const qAtt = query(
                 collection(db, 'user_cal_data'),
@@ -117,7 +108,6 @@ const Calendar = ({
             const hostSnap = await getDoc(hostReq);
             const hostData = hostSnap.data();
             console.log('hostdata', hostData);
->>>>>>> 77c296273d61ac9ad309fee48d46a9db727c8763
 
             const host = {
               displayName: hostData.displayName,
