@@ -1,5 +1,8 @@
 # FreeTime
 
+![Screen Shot 2022-07-02 at 12 31 24 PM](https://user-images.githubusercontent.com/100612152/177014060-122df0bf-607c-4cc5-af1c-d06dfcc26456.png)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Overview
