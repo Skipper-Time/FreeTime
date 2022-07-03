@@ -1,5 +1,8 @@
 # FreeTime
 
+![Screen Shot 2022-07-02 at 12 31 24 PM](https://user-images.githubusercontent.com/100612152/177014060-122df0bf-607c-4cc5-af1c-d06dfcc26456.png)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Overview
@@ -37,14 +40,33 @@ yarn dev
 4. Open http://localhost:3000 in your browser
 
 5. Firebase setup: 
-Create a New Project and add the information to .env
-```json
-"NEXT_PUBLIC_FIREBASE_API_KEY"="API_KEY"
-"NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"="AUTH_DOMAIN"
-"NEXT_PUBLIC_FIREBASE_PROJECT_ID"="PROJECT_ID"
-"NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"="STORAGE_BUCKET"
-"NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"="SENDER_ID"
-"NEXT_PUBLIC_FIREBASE_APP_ID"="APP_ID"
+Create a New Project and add the information to next.config.js
+```
+const withTM = require('next-transpile-modules')([
+  '@fullcalendar/common',
+  '@babel/preset-react',
+  '@fullcalendar/common',
+  '@fullcalendar/daygrid',
+  '@fullcalendar/interaction',
+  '@fullcalendar/react',
+  '@fullcalendar/timegrid',
+]);
+
+/** @type {import('next').NextConfig} */
+module.exports = withTM({
+  // your custom config goes here
+  reactStrictMode: true,
+  env: {
+    apiKey: "API_KEY",
+    authDomain: "AUTH_DOMAIN",
+    projectId: "PROJECT_ID",
+    storageBucket: "STORAGE_BUCKET",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID",
+    clientId: "NEED TO FILL THIS IN WITH WHERE CLIENTID IS FOUND",
+    clientSecret: "NEED TO FILL THIS IN WITH WHERE CLIENTSECRET IS FOUND",
+  },
+});
 ```
 
 ---
