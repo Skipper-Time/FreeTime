@@ -28,7 +28,7 @@ import {
   doc,
   updateDoc,
   arrayUnion,
-  arrayRemove
+  arrayRemove,
 } from 'firebase/firestore';
 import InvitedFriends from '../components/InvitedFriends';
 import NewEventModal from '../components/NewEventModal';
@@ -74,17 +74,18 @@ export default function Home() {
   const addNewFriend = (newFriendEmail) => {
     const userDoc = doc(db, 'user_cal_data', userEmail);
     updateDoc(userDoc, {
-      friends: arrayUnion(newFriendEmail)
-    })
+      friends: arrayUnion(newFriendEmail),
+    });
     // console.log('ALL USERS LOOK LIKE THIS', allUsers)
     const newUsers = allUsers.filter((each) => each.email !== newFriendEmail);
     setAllUsers(newUsers);
 
     const friendsRef = doc(db, 'user_cal_data', newFriendEmail);
-    getDoc(friendsRef)
-      .then(ref => {
-        const newFriend = ref.data();
-        setFriends(prev => [...prev, {
+    getDoc(friendsRef).then((ref) => {
+      const newFriend = ref.data();
+      setFriends((prev) => [
+        ...prev,
+        {
           name: newFriend.displayName,
           email: newFriendEmail.split('@')[0],
           profilePic: newFriend.profilePic,
@@ -92,17 +93,27 @@ export default function Home() {
           location: newFriend.location,
           freeTimeEmail: newFriend.freeTimeEmail,
           isInvited: false,
-        }]);
-      })
+        },
+      ]);
+    });
   };
 
   const removeFriend = (oldFriendEmail, oldFriendName, oldFriendProfilePic) => {
     const userDoc = doc(db, 'user_cal_data', userEmail);
     updateDoc(userDoc, {
-      friends: arrayRemove(oldFriendEmail)
+      friends: arrayRemove(oldFriendEmail),
     });
-    setFriends(prev => prev.filter(each => each.fullEmail !== oldFriendEmail));
-    setAllUsers(prev => [...prev, {name: oldFriendName, email: oldFriendEmail, profilePic: oldFriendProfilePic}])
+    setFriends((prev) =>
+      prev.filter((each) => each.fullEmail !== oldFriendEmail)
+    );
+    setAllUsers((prev) => [
+      ...prev,
+      {
+        name: oldFriendName,
+        email: oldFriendEmail,
+        profilePic: oldFriendProfilePic,
+      },
+    ]);
   };
 
   const findMutualTime = (email, freeTime) => {
@@ -305,7 +316,7 @@ export default function Home() {
         removeFriend={removeFriend}
       />
       <Flex
-        bg="#525E46"
+        bg="#E26D5C"
         justify="space-between"
         gap="1rem"
         w="100%"
@@ -322,7 +333,7 @@ export default function Home() {
           </Button>
         </Box>
       </Flex>
-      <Flex justify="center" bg="#6D7D5D" paddingBottom="500px">
+      <Flex justify="center" bg="#f7ecda" paddingBottom="1000px">
         <Box
           p="3rem 3rem 3rem 3rem"
           bg="white"
@@ -331,16 +342,20 @@ export default function Home() {
           borderRadius="12px"
           style={{ filter: 'drop-shadow(10px 10px 10px rgba(0,0,0,0.2))' }}
         >
-          <Button
-            ref={btnRef}
-            onClick={onOpen}
-            mb="1rem"
-            bg="#4B593D"
-            color="#f6f3f3"
-          >
-            Find Friends
-          </Button>
-          <InvitedFriends friends={friends} />
+          <Flex gap="1rem" alignItems="center">
+            <Button
+              ref={btnRef}
+              onClick={onOpen}
+              mb="1rem"
+              bg="#E26D5C"
+              color="#f6f3f3"
+              style={{ transition: '0.3s' }}
+              _hover={{ backgroundColor: '#ba685b', transform: 'scale(1.02)' }}
+            >
+              Find Friends
+            </Button>
+            <InvitedFriends friends={friends} />
+          </Flex>
           <Box>
             {events.length !== 0 && (
               <Calendar

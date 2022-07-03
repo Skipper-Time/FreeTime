@@ -35,7 +35,7 @@ a {
 
 .fc-timegrid-event {
   border-color: transparent !important;
-  color: black !important;
+  /* color: black !important; */
   transition: 0.3s;
 }
 .fc-timegrid-event:hover {

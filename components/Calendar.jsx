@@ -33,16 +33,12 @@ const Calendar = ({
 
   const calendarRef = useRef(null);
 
-  const handleDateClick = (arg) => {
-    alert(arg.dateStr);
-  };
-
   const combineEvents = () => {
     const freeTimeDisplay = getFreeTime(events).map((event) => ({
       ...event,
       title: '~FREE~ 🫡',
       backgroundColor: '#8E9EEB',
-      color: 'black',
+      // color: 'black',
     }));
 
     const bookedTime = mergeFreeEvents(bookedFreeTime).map((event) => ({
@@ -50,8 +46,7 @@ const Calendar = ({
       start: event.start.dateTime,
       end: event.end.dateTime,
       title: event.summary,
-      backgroundColor: 'Orange',
-      color: 'black',
+      backgroundColor: '#62a667',
     }));
     // console.log('BOOOOOOOOOKED TIME:', bookedTime);
 
@@ -74,7 +69,6 @@ const Calendar = ({
         selectable
         slotMinTime="8:00:00"
         slotMaxTime="23:00:00"
-        dateClick={handleDateClick}
         eventClick={async (arg) => {
           if (arg.event.title === '~FREE~ 🫡') {
             setEventInfo({
