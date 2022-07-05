@@ -1,12 +1,11 @@
 # FreeTime
 
+## Overview
+FreeTime is a social application that allows users to import their Google calendars to find mutual free time among friends. It makes scheduling events easier, with the visual display of overlapping free time, displated in a calendar format. Its primary goal is to encourage people to seek friendship, bonding, and a feeling of belonging outside of work. 
+
 ![Screen Shot 2022-07-02 at 12 31 24 PM](https://user-images.githubusercontent.com/100612152/177014060-122df0bf-607c-4cc5-af1c-d06dfcc26456.png)
 
-
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Overview
-Full stack project ...
 
 <img src="" alt="" width=70% height=auto>
 
@@ -18,7 +17,8 @@ Full stack project ...
 - [Contributor](#contributors)
 
 ## Description
-description
+This project was built by a team of 7 developers over the span of 1 week. .....
+
 
 ---
 
