@@ -83,19 +83,23 @@ module.exports = withTM({
 
 ## Project Details
 ### Login / Sign up Page
-> description
+> This page features a modal where users can either log in or sign up via Google authentication to access their personal calendars. If signing up as a new account, user will grant the app read/write access to user's personal Google calendar.
 <img src="" alt="" width=70% height=auto>
 
 ### Calendar Events View
-> description
+> This is where the user is able to see his/her personal calendar, with the "free time" slots emphasized. When friends are selected from the friends list, calendar view will change to display overlapping free time of selected users. The user is then able to create an event with selected participants. 
+<img src="" alt="" width=70% height=auto>
+
+### New Event
+> Clicking on a "free" slot on the calendar opens up this modal. It allows users to enter in information for an event then create the event by sending a Google calendar invite to all selected participants. 
 <img src="" alt="" width=70% height=auto>
 
 ### Friends
-> description
+> The friends side drawer features 2 lists - current friends and all other users. The user can select current friends to find overlapping calendar times. Or, the user can add a user to the friends list by searching via email or username. 
 <img src="" alt="" width=70% height=auto>
 
 ### Notifications
-> description
+> The notification tab's back end is still in development, but it will display a user's pending friend requests or event invitations to be accepted or declined. The number by the bell indicates the current number of unread notifications. 
 <img src="" alt="" width=70% height=auto>
 
 ---
